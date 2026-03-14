@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celebrity Ascent — Dining Planner v11</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- IMPORT MODAL -->
+<div class="mo" id="mo-import">
+  <div class="mb">
+    <h3>📥 Import Saved Plan</h3>
+    <p>Paste exported JSON below, or choose a <code>.json</code> file. This will <span style="color:#f07a7a">replace your current plan</span>.</p>
+    <textarea class="mta" id="imp-ta" placeholder="Paste JSON here…"></textarea>
+    <div class="mbtns">
+      <button class="mbtn pri" onclick="doImportText()">✓ Import</button>
+      <button class="mbtn" onclick="document.getElementById('imp-file').click()">📂 Choose File</button>
+      <button class="mbtn red" onclick="closeMo('mo-import')">Cancel</button>
+    </div>
+  </div>
+</div>
+<input type="file" id="imp-file" accept=".json" onchange="handleFileImp(event)">
+
+<!-- EXPORT DEFAULT_SIG MODAL -->
+<div class="mo" id="mo-dsig">
+  <div class="mb" style="max-width:700px">
+    <h3>&#x1F4C4; Export Signatures Array</h3>
+    <p style="font-size:.8rem;color:var(--muted)">Copy the block below and replace the <code>const DEFAULT_SIG = [...]</code> array in the HTML source file.</p>
+    <textarea class="mta" id="dsig-ta" style="height:300px;font-family:monospace;font-size:.72rem;white-space:pre" readonly></textarea>
+    <div class="mbtns">
+      <button class="mbtn pri" onclick="(function(){var t=document.getElementById('dsig-ta');t.select();navigator.clipboard?navigator.clipboard.writeText(t.value).then(function(){toast('Copied to clipboard!');}):document.execCommand('copy');})()">&#x1F4CB; Copy</button>
+      <button class="mbtn red" onclick="closeMo('mo-dsig')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div id="hdr">
+  <div class="hi">
+    <div class="hl">
+      <div class="cel">✦ Celebrity Cruises ✦</div>
+      <h1 class="sn">Celebrity Ascent</h1>
+      <p class="ss">Panama Canal &amp; Southern Caribbean · 11 Nights · March 16, 2026</p>
+    </div>
+    <div class="hr">
+      <div class="dl" id="diner-legend"></div>
+      <div class="ha">
+        <span class="ver">v11</span>
+        <button class="iob imp" onclick="openMo('mo-import')">📥 Import</button>
+        <button class="iob" onclick="doExport()">📤 Export</button>
+        <button class="iob" onclick="exportDefaultSig()">📋 SIG Array</button>
+        <button class="vtab on" onclick="setView('plan')">🍽 Planner</button>
+        <button class="vtab" onclick="setView('sum')">📊 Overview</button>
+        <button id="add-mode-btn" class="add-mode-btn" onclick="toggleAddMode()">✎ Add Items</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="rail"></div>
+
+<div id="main">
+  <!-- PLANNER VIEW -->
+  <div id="v-plan">
+    <div id="vbar">
+      <span class="vbl">Tonight at:</span>
+      <div class="vbtns" id="mdr-btns"></div>
+      <div class="vdiv"></div>
+      <div class="vbtns" id="buf-btns"></div>
+      <div class="vdiv"></div>
+      <div class="sp-wrap">
+        <select class="sp-sel" id="sp-sel" onchange="setSpecialty(this.value)">
+          <option value="">★ Specialty ($$)…</option>
+        </select>
+        <span class="sp-arr">▾</span>
+      </div>
+      <button class="clr" onclick="clearVenue()">✕ Undecided</button>
+    </div>
+
+    <div id="dflow"></div>
+
+    <!-- SECTION 1: Signatures -->
+    <div class="planner-section" id="sec-sig">
+      <div class="ps-hdr" onclick="toggleSec('sig')">
+        <span class="ps-icon">✨</span>
+        <div class="ps-titles">
+          <div class="ps-title" style="color:var(--sig)">Celebrity Signatures</div>
+          <div class="ps-desc">Tonight's rotating menu · same at all four MDRs · update nightly from the app</div>
+        </div>
+        <div class="ps-badges" id="sig-badges"></div>
+        <span class="ps-toggle open" id="tog-sig">›</span>
+      </div>
+      <div class="ps-body" id="body-sig">
+        <div class="sig-grid" id="sig-grid"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: MDR Exclusives -->
+    <div class="planner-section" id="sec-excl">
+      <div class="ps-hdr" onclick="toggleSec('excl')">
+        <span class="ps-icon">🎭</span>
+        <div class="ps-titles">
+          <div class="ps-title" style="color:var(--excl)">MDR Exclusives</div>
+          <div class="ps-desc">Fixed themed dishes · unique per restaurant · available every night</div>
+        </div>
+        <div class="ps-badges" id="excl-badges"></div>
+        <span class="ps-toggle open" id="tog-excl">›</span>
+      </div>
+      <div class="ps-body" id="body-excl">
+        <div class="excl-grid" id="excl-grid"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Classics -->
+    <div class="planner-section" id="sec-cls">
+      <div class="ps-hdr collapsed" onclick="toggleSec('cls')">
+        <span class="ps-icon">📋</span>
+        <div class="ps-titles">
+          <div class="ps-title" style="color:var(--cls)">Celebrity Classics</div>
+          <div class="ps-desc">Always available · same every night at every MDR · reliable fallbacks</div>
+        </div>
+        <div class="ps-badges" id="cls-badges"></div>
+        <span class="ps-toggle" id="tog-cls">›</span>
+      </div>
+      <div class="ps-body" id="body-cls" style="display:none">
+        <div class="cls-grid" id="cls-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY VIEW -->
+  <div id="v-sum">
+    <div class="sum-sec">
+      <div class="sum-t">🍽 Smart Meal Plan</div>
+      <div id="sum-mealplan"></div>
+    </div>
+    <div class="sum-sec">
+      <div class="sum-t">🗓 10-Night Schedule</div>
+      <div style="border:1px solid var(--border);border-radius:6px;overflow:hidden">
+        <div class="ov-hdr"><div>Night</div><div>Date</div><div>Venue</div><div>Best MDR Pick</div><div>Starred Items</div><div style="text-align:right">Tags</div></div>
+        <div id="sum-grid"></div>
+      </div>
+    </div>
+    <div class="sum-sec">
+      <div class="sum-t">⭐ Featured / Must-Try Items</div>
+      <div id="sum-feat"></div>
+    </div>
+    <div class="sum-sec">
+      <div class="sum-t">🍽 Selections by Person &amp; Category</div>
+      <div id="sum-catperson"></div>
+    </div>
+    <div class="sum-sec">
+      <div class="sum-t">📊 Stats</div>
+      <div class="stg" id="sum-stats"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<datalist id="sug"></datalist>
+
+<script type="module" src="app.js" defer></script>
+</body>
+</html>
