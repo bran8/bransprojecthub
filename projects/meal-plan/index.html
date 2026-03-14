@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Recommendation System</title>
+    <link rel="stylesheet" href="meal_planner.css">
+</head>
+<body>
+    <div class="container">
+
+        <header>
+            <h1>Menu Recommendation System</h1>
+            <p class="subtitle">10-Night 3-Course Planning • Featured Items Guaranteed • Diner Coverage Optimized</p>
+        </header>
+
+        <main>
+
+            <!-- ── Upload ─────────────────────────────────────────── -->
+            <div class="upload-section">
+                <label for="fileInput" class="upload-btn">
+                    📤 Upload JSON Data File
+                </label>
+                <input type="file" id="fileInput" accept=".json">
+                <div class="status" id="status">
+                    No file loaded. Please upload the JSON file conforming to the provided schema.
+                </div>
+            </div>
+
+<div id="content" style="display: none;">
+    <!-- Recommendations only -->
+    <div class="recs-section">
+        <div class="recs-header">
+            <div class="section-title" style="margin-bottom:0;">Recommended 3-Course Meals</div>
+            <button id="generateBtn">Generate Recommendations</button>
+        </div>
+        <div id="recommendations"></div>
+    </div>
+</div>
+
+        </main>
+
+        <div class="footer">
+            Standalone HTML • Data loaded into global <code>window.menuData</code> for custom mathematical extensions
+            • Greedy set-cover algorithm used for diner coverage
+        </div>
+
+    </div><!-- /.container -->
+
+    <script src="meal_planner.js"></script>
+</body>
+</html>

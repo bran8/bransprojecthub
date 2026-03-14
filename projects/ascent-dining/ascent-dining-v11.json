@@ -1,0 +1,2766 @@
+{
+  "currentNight": 1,
+  "nights": [
+    {
+      "dining": null,
+      "tags": {
+        "SIG||Arugula Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Warm Goat Cheese Croustillant": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "SIG||Atlantic Pollock": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Chicken Chiquita": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Duo of Pork": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "SIG||Biscuit Croustillant": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "SIG||Sticky Toffee Pudding": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "SIG||Salmon Tartare": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Tomato Watermelon Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Grilled Cobia": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Grilled Lamb T-Bone": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Seared Duck": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Steak Diane": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Stuffed Portobello Mushroom": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Strawberry Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "SIG||Warm Apple Crumble a la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "SIG||Asian Consommé": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Garden Fresh Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Fried Masala Potatoes": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Lemon-Pepper Roasted Chicken": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Pan-Seared Aged Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Roasted Pork Loin": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Roasted Trout": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Butter Pecan Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "SIG||Panna Cotta Alla Romana": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "SIG||Warm Chocolate Lava Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "SIG||Beef Carpaccio": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Cream of Broccoli": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Barolo-Braised Beef Short Ribs": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Cajun-Spiced Drum Fish": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Oven-Roasted Chicken Saltimbocca": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Roasted Pork Loin": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Vegetable Korma": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Apple Tarte Tatin": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "SIG||Olive Oil Cremeux": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "SIG||Chop Chop Composed Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Spinach Turnover": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Grilled Flank Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Homemade Gnocchi ai Quattro Formaggi": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Oven-Roasted Turkey": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Pork Scaloppini Marsala": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Sautéed Tilapia Filet": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Sacher Torte": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "SIG||Whipped Passionfruit Curd": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "SIG||Mesclun Greens": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Smoked Ham & Split-Pea Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Beef Bourguignonne": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Broiled Australian Sea Bass": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Crispy Chicken Roulade": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Moroccan-Spiced Lamb Kebab": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Pappardelle con Funghi": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Bananas Foster": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "SIG||Cafe Pot de Creme": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "SIG||Cream of Chicken": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Cured Atlantic Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Almond-Crusted Hake": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Beef Brochette": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Pan-Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Tender Braised Veal": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Vegetable Wellington": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Fraisier Sweet Strawberry Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "SIG||Warm Chocolate Lava Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "SIG||Pasta Fagioli Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||The Wedge Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Rigatoni Boscaiola": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Seared Branzino": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "SIG||Steak and Chips": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Toasted Israeli Couscous Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Turkey Parmesan": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Strawberry Angel Food Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "SIG||Tiramisu": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "SIG||Arugula and Mixed Green Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Creamy Smoked Tomato Bisque": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Beef Wellington": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Broiled Lobster Tail": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "SIG||Creamy Wild Mushroom Risotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Herb-Crusted Haddock Fillet": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Slow-Roasted Leg of Lamb": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Celebrity Signature Baked Alaska": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "SIG||Citrus Roulade": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    },
+    {
+      "dining": null,
+      "tags": {
+        "SIG||Cream of Wild Forest Mushroom Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Organic Roasted Red Beets": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "SIG||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Home-Style Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Oven-Roasted Jerk Spiced Chicken": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Seared Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Spinach & Ricotta Ravioli": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "SIG||Chocolate Cherry Trifle": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "SIG||New York Cheesecake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "Cosmopolitan||Cauliflower Flan": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Salmon Gravlax": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Yellow Corn Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cosmopolitan||Spaghetti à la Mallorquín": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Oxtail Royale": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cosmopolitan||Pan-Seared Cod": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cosmopolitan||Carrot Cake": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Cyprus||Lentil Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Mezze Board": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Cyprus||Grilled Octopus": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Cyprus||Braised Lamb Shanks": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Cypriot Short Ribs": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Cyprus||Kordelia Pasta": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Cyprus||Galaktoboureko": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Normandie||Turkey Terrine": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Coquilles Saint-Jacques": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Baked Brie": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Normandie||Beef en Croûte": {
+          "diners": [],
+          "feat": true,
+          "cat": "e"
+        },
+        "Normandie||Marmite Dieppoise": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Seared Duck Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Normandie||Millefeuille": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "Tuscan||Roasted Pumpkin Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Creamy Tuscan Shrimp Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "Tuscan||Eggplant Caponata Bruschetta": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "Tuscan||Slow Roasted Herbed Tuscan Pork Chop": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Pappardelle Alla Veneziana": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Strozzapreti Carbonara": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "Tuscan||Cannoli": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Chilled Shrimp Cocktail": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Classic Caesar Salad": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Escargots à la Bourguignonne": {
+          "diners": [],
+          "feat": true,
+          "cat": "s"
+        },
+        "CLS||French Onion Soup": {
+          "diners": [],
+          "feat": false,
+          "cat": "s"
+        },
+        "CLS||Aged Prime Rib of Beef": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Broiled Salmon": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Creamy Corn Farrotto": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled Chicken Breast": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Grilled New York Sirloin Steak": {
+          "diners": [],
+          "feat": false,
+          "cat": "e"
+        },
+        "CLS||Apple Pie à la Mode": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Chocolate Cake": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Crème Brûlée": {
+          "diners": [],
+          "feat": true,
+          "cat": "d"
+        },
+        "CLS||Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Low Fat Frozen Yogurt": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Sorbet": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        },
+        "CLS||Vanilla Ice Cream": {
+          "diners": [],
+          "feat": false,
+          "cat": "d"
+        }
+      },
+      "sigCustom": {
+        "s": [],
+        "e": [],
+        "d": []
+      }
+    }
+  ],
+  "exclCustom": {},
+  "clsCustom": {
+    "s": [],
+    "e": [],
+    "d": []
+  }
+}

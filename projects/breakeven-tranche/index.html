@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ETF Stock Breakeven Helper</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #080c10;
+      --surface:  #0e1318;
+      --border:   #1c2530;
+      --border2:  #243040;
+      --text:     #c8d8e8;
+      --muted:    #5a7080;
+      --accent:   #00d4ff;
+      --green:    #00e676;
+      --red:      #ff4c6a;
+      --yellow:   #ffd740;
+      --orange:   #ff9800;
+      --mono:     'JetBrains Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      min-height: 100vh;
+      font-size: 14px;
+    }
+    .header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .header h1 { font-family: var(--mono); font-size: 1.15rem; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; }
+    .header .version { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 2px 7px; border-radius: 3px; }
+    .header .subtitle { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+    .scenario-bar { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 16px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; flex-wrap: wrap; }
+    .scenario-bar .field { flex: 1; min-width: 140px; }
+    .btn-group { display: flex; gap: 6px; align-items: flex-end; flex-wrap: wrap; }
+    .inputs-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 0.72rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    input[type="number"], input[type="text"], select { font-family: var(--mono); font-size: 0.85rem; padding: 7px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; color: var(--text); width: 100%; transition: border-color .15s; }
+    input:focus, select:focus { outline: none; border-color: var(--accent); }
+    .field .hint { font-size: 0.68rem; color: var(--muted); font-family: var(--mono); }
+    .field .hint.pos { color: var(--green); }
+    .field .hint.neg { color: var(--red); }
+    .slider-row { display: flex; gap: 8px; align-items: center; }
+    input[type="range"] { flex: 1; accent-color: var(--accent); height: 3px; }
+    .slider-label { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); min-width: 46px; text-align: right; }
+    button { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; padding: 7px 12px; border-radius: 5px; border: 1px solid var(--border2); background: var(--surface); color: var(--text); cursor: pointer; white-space: nowrap; transition: background .15s, border-color .15s; }
+    button:hover { background: #151f2a; border-color: var(--accent); }
+    button.primary { background: #002a35; border-color: var(--accent); color: var(--accent); }
+    button.primary:hover { background: #003d4d; }
+    button.be-btn { font-family: var(--mono); font-size: 0.7rem; padding: 4px 8px; background: #001a0a; border-color: #1a4a28; color: var(--green); }
+    button.be-btn:hover { background: #002a14; border-color: var(--green); }
+    button.danger { border-color: #3a1a1a; color: #c06060; }
+    button.danger:hover { background: #2a0a0a; border-color: var(--red); }
+    button.export-btn { border-color: #1a2a3a; color: var(--yellow); background: #0a1520; }
+    button.export-btn:hover { background: #0f1e2a; border-color: var(--yellow); }
+
+    /* ── Execution Toggle Buttons ── */
+    .exec-btns { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+    .exec-btn {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s;
+      width: 68px;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+    .exec-btn.sell-done   { background: #002a1a; border-color: var(--green);  color: var(--green);  }
+    .exec-btn.sell-missed { background: #2a0a0a; border-color: var(--red);    color: var(--red);    }
+    .exec-btn.buy-done    { background: #001a2a; border-color: var(--accent); color: var(--accent); }
+    .exec-btn.buy-missed  { background: #2a1500; border-color: var(--orange); color: var(--orange); }
+    .exec-btn:hover { filter: brightness(1.3); }
+
+    /* scenario legend */
+    .exec-legend {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-family: var(--mono);
+      color: var(--muted);
+      align-items: center;
+    }
+    .exec-legend span { display: flex; align-items: center; gap: 5px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot.g { background: var(--green); }
+    .dot.r { background: var(--red); }
+    .dot.b { background: var(--accent); }
+    .dot.o { background: var(--orange); }
+
+    /* stat cards */
+    .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; position: relative; overflow: hidden; }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .stat-card.neutral::before { background: var(--border2); }
+    .stat-card.pos::before    { background: var(--green); }
+    .stat-card.neg::before    { background: var(--red); }
+    .stat-card.accent::before { background: var(--accent); }
+    .stat-card.warn::before   { background: var(--orange); }
+    .stat-card .label { font-size: 0.67rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+    .stat-card .value { font-family: var(--mono); font-size: 1.05rem; font-weight: 600; color: var(--text); }
+    .stat-card .value.pos    { color: var(--green); }
+    .stat-card .value.neg    { color: var(--red); }
+    .stat-card .value.accent { color: var(--accent); }
+    .stat-card .value.warn   { color: var(--orange); }
+    .stat-card .sub { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+
+    /* chart */
+    .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; margin-bottom: 16px; }
+    .chart-title { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
+    #waterfallChart, #sensitivityChart { width: 100%; display: block; }
+
+    /* table */
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    thead tr { background: var(--surface); position: sticky; top: 0; z-index: 2; }
+    th { padding: 8px 10px; text-align: left; font-weight: 600; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr { transition: background .1s; }
+    tbody tr:hover { background: rgba(255,255,255,.025); }
+    tbody tr.inactive { opacity: .4; }
+    tbody tr.active   { border-left: 2px solid var(--accent); }
+    tbody tr.sell-missed-row { border-left: 2px solid var(--red) !important; }
+    tbody tr.buy-missed-row  { border-left: 2px solid var(--orange) !important; }
+    tbody tr.both-missed-row { border-left: 2px solid #888 !important; }
+
+    .tranche-badge { font-family: var(--mono); font-size: 0.7rem; font-weight: 600; color: var(--accent); background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.2); padding: 2px 6px; border-radius: 3px; }
+
+    td input[type="number"] { font-family: var(--mono); font-size: 0.78rem; padding: 4px 7px; background: transparent; border: 1px solid transparent; border-radius: 4px; color: var(--text); width: 100%; min-width: 70px; transition: border-color .1s, background .1s; }
+    td input[type="number"]:hover  { border-color: var(--border2); }
+    td input[type="number"]:focus  { outline: none; background: var(--surface); border-color: var(--accent); }
+
+    .mono { font-family: var(--mono); }
+    .pos  { color: var(--green); }
+    .neg  { color: var(--red); }
+    .dim  { color: var(--muted); }
+    .warn { color: var(--orange); }
+
+    .be-price-tag { font-family: var(--mono); font-size: 0.65rem; color: var(--yellow); margin-top: 2px; }
+    .to-be-tag    { font-family: var(--mono); font-size: 0.65rem; color: var(--muted);  margin-top: 1px; }
+
+    tfoot tr td { background: #0c1820; font-weight: 600; border-top: 1px solid var(--border2); border-bottom: none; font-family: var(--mono); font-size: 0.8rem; }
+
+td .t-shares {
+  border: 2px solid rgba(0,212,255,.08) !important;  /* Visible default border; swap #ccc for var(--border2) */
+  padding: 5px !important;
+  box-sizing: border-box !important;
+  transition: border-color .1s, background .1s !important;
+}
+
+td .t-shares:hover {
+  border-color: var(--border2) !important;
+}
+
+td .t-shares:focus {
+  outline: none !important;
+  background: var(--surface) !important;
+  border-color: var(--accent) !important;
+}
+
+    .price-fetch { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+    .price-fetch .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; transition: background .3s; }
+    .price-fetch .status-dot.live    { background: var(--green);  animation: pulse 2s infinite; }
+    .price-fetch .status-dot.error   { background: var(--red); }
+    .price-fetch .status-dot.loading { background: var(--yellow); animation: pulse .6s infinite; }
+    .price-fetch .status-text { font-family: var(--mono); font-size: 0.67rem; color: var(--muted); }
+    .price-fetch button { font-size: 0.67rem; padding: 2px 7px; border-color: var(--border); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ── Lock buttons (sell price / rebuy price per tranche) ── */
+    .lock-btn {
+      font-size: 0.72rem;
+      padding: 1px 4px;
+      border-radius: 3px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      color: var(--muted);
+      line-height: 1.4;
+      flex-shrink: 0;
+      transition: all .15s;
+    }
+    .lock-btn:hover { border-color: var(--border2); background: var(--surface); filter: brightness(1.4); }
+    .lock-btn.locked {
+      color: var(--yellow);
+      border-color: rgba(255,215,64,.5);
+      background: rgba(255,215,64,.07);
+    }
+    .price-cell { display: flex; align-items: center; gap: 4px; }
+    td input.t-sellPrice, td input.t-rebuy {
+      width: 80px; padding: 3px 6px; min-width: 64px;
+      background: var(--surface) !important;
+      border: 1px solid var(--border2) !important;
+      border-radius: 4px;
+    }
+    td input.t-sellPrice:focus, td input.t-rebuy:focus {
+      border-color: var(--accent) !important;
+      outline: none;
+    }
+    td input.t-sellPrice.locked, td input.t-rebuy.locked {
+      border-color: rgba(255,215,64,0.5) !important;
+      background: rgba(255,215,64,0.07) !important;
+    }
+    .t-sellValue, .t-rebuyValue { font-family: var(--mono); font-size: 0.64rem; color: var(--muted); margin-top: 2px; }
+
+    .mt8 { margin-top: 8px; }
+    .flex-end { display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px; align-items:center; flex-wrap:wrap; }
+
+    /* ── Calculation breakdown panel ── */
+    .breakdown-wrap {
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .breakdown-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    #calcBreakdown {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--text);
+      line-height: 1.75;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .idle-cash-bar {
+      display: none;
+      background: #1a0f00;
+      border: 1px solid var(--orange);
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin-bottom: 14px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--orange);
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .idle-cash-bar.visible { display: flex; }
+    .idle-cash-bar strong { color: var(--yellow); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>ETF Stock Breakeven Helper</h1>
+    <span class="version">v14</span>
+    <span class="subtitle">8-tranche ladder · sell/buy execution toggles · price locks · missed-rebuy scenario · BID on-demand</span>
+  </div>
+
+  <div class="scenario-bar">
+    <div class="field">
+      <label>Scenario name</label>
+      <input id="scenarioName" type="text" placeholder="e.g. Bear_20pct_base">
+    </div>
+    <div class="field">
+      <label>Saved scenarios</label>
+      <select id="scenarioSelect"><option value="">(none)</option></select>
+    </div>
+    <div class="btn-group">
+      <button id="saveScenarioBtn" class="primary">Save</button>
+      <button id="loadScenarioBtn">Load</button>
+      <button id="deleteScenarioBtn" class="danger">Delete</button>
+      <button id="exportBtn" class="export-btn">⬇ CSV</button>
+    </div>
+  </div>
+
+  <div class="inputs-row">
+    <div class="field">
+      <label>Ticker</label>
+      <input id="ticker" type="text" placeholder="AAPL" style="text-transform:uppercase">
+    </div>
+    <div class="field">
+      <label>Original total shares</label>
+      <input id="origShares" type="number" value="1000" min="1" step="1">
+    </div>
+    <div class="field">
+      <label>Original buy price ($/sh)</label>
+      <input id="origPrice" type="number" value="50" min="0" step="0.05">
+    </div>
+    <div class="field">
+      <label>Current price ($/sh)</label>
+      <input id="currentPrice" type="number" value="45" min="0" step="0.01">
+      <div class="price-fetch">
+        <div class="status-dot" id="priceDot"></div>
+        <span class="status-text" id="priceStatus">Enter ticker · click ↻ to fetch BID</span>
+        <button id="fetchNowBtn" title="Fetch now">↻</button>
+      </div>
+      <div class="hint" id="currentVsOrigHint"></div>
+    </div>
+    <div class="field">
+      <label>Global future sell price ($/sh)</label>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input id="futurePrice" type="number" value="60" min="0" step="0.5" style="flex:1;">
+        <button class="be-btn" id="globalBreakevenBtn">⟳ BE</button>
+      </div>
+      <div class="slider-row mt8">
+        <input id="futurePriceSlider" type="range" min="-50" max="100" step="1" value="0">
+        <span class="slider-label" id="futurePriceSliderLabel">+0%</span>
+      </div>
+      <div class="hint" id="futurePctHint"></div>
+    </div>
+  </div>
+
+  <!-- Execution Legend -->
+  <div class="exec-legend">
+    <strong style="color:var(--text);margin-right:4px;">Execution toggles →</strong>
+    <span><span class="dot g"></span>SELL ✓ — sale filled</span>
+    <span><span class="dot r"></span>SELL ✗ — sale missed / not triggered</span>
+    <span><span class="dot b"></span>BUY ✓ — rebuy filled</span>
+    <span><span class="dot o"></span>BUY ✗ — rebuy missed (cash idle)</span>
+    <span style="margin-left:auto;color:var(--muted);">Click buttons in T# column to toggle each tranche's execution state</span>
+  </div>
+
+  <!-- Idle Cash Warning -->
+  <div class="idle-cash-bar" id="idleCashBar">
+    ⚠ Idle cash from missed rebuys: <strong id="idleCashAmt">$0</strong>
+    &nbsp;|&nbsp; Locked-in loss on sold shares: <strong id="lockedLossAmt">$0</strong>
+    &nbsp;|&nbsp; Shares no longer held: <strong id="missedShares">0 sh</strong>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="stat-cards" id="statCards">
+    <div class="stat-card neutral">
+      <div class="label">Original Book</div>
+      <div class="value" id="sc-origBook">—</div>
+      <div class="sub" id="sc-origBookSub">—</div>
+    </div>
+    <div class="stat-card neutral" id="sc-currBookCard">
+      <div class="label">Current Book Value</div>
+      <div class="value" id="sc-currBook">—</div>
+      <div class="sub" id="sc-currBookSub">—</div>
+      <div class="sub" id="sc-currBookPL" style="margin-top:3px;">—</div>
+    </div>
+    <div class="stat-card neutral">
+      <div class="label">Shares Sold</div>
+      <div class="value" id="sc-sold">—</div>
+      <div class="sub" id="sc-soldSub">—</div>
+    </div>
+    <div class="stat-card neutral">
+      <div class="label">Realized P/L</div>
+      <div class="value" id="sc-realizedPL">—</div>
+    </div>
+    <div class="stat-card neutral">
+      <div class="label">New Cost Basis</div>
+      <div class="value" id="sc-newBasis">—</div>
+    </div>
+    <div class="stat-card neutral">
+      <div class="label">Future Value</div>
+      <div class="value" id="sc-futureVal">—</div>
+      <div class="sub" id="sc-futureValSub">— sh total held</div>
+      <div class="sub" id="sc-futureValIdleSub" style="display:none;"></div>
+    </div>
+    <div class="stat-card neutral" id="sc-totalPLCard">
+      <div class="label">Total P/L vs Orig</div>
+      <div class="value" id="sc-totalPL">—</div>
+      <div class="sub" id="sc-totalPLSub">—</div>
+      <div class="sub" id="sc-totalPLIdleSub" style="display:none;"></div>
+    </div>
+    <div class="stat-card neutral" id="sc-idleCashCard">
+      <div class="label">Idle Cash</div>
+      <div class="value warn" id="sc-idleCash">—</div>
+      <div class="sub" id="sc-idleCashSub">from missed rebuys</div>
+    </div>
+    <div class="stat-card accent">
+      <div class="label">Global Breakeven</div>
+      <div class="value accent" id="sc-globalBE">—</div>
+      <div class="sub" id="sc-globalBESub">—</div>
+      <div class="sub" id="sc-globalBEIdleSub" style="display:none;color:var(--accent);font-weight:600;"></div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-wrap">
+    <div class="chart-title">&#9664; Value Waterfall &mdash; Original Book &rarr; Current Book</div>
+    <canvas id="waterfallChart" style="width:100%;height:200px;display:block;"></canvas>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">&#9664; Sensitivity &mdash; P/L vs Future Price by Scenario</div>
+    <canvas id="sensitivityChart" style="width:100%;height:210px;display:block;"></canvas>
+    <div id="sensLegend" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;font-family:var(--mono);font-size:0.66rem;color:var(--muted);"></div>
+  </div>
+
+  <!-- Table -->
+  <div class="flex-end">
+    <span style="font-size:0.72rem;color:var(--muted);">Click <strong style="color:var(--green)">BE</strong> to set global future price to tranche breakeven</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>T# / Exec</th>
+          <th>Shares sold</th>
+          <th>Sell offset %</th>
+          <th>Sell price</th>
+          <th>Sale P/L</th>
+          <th>Drop % from curr</th>
+          <th>Rebuy price</th>
+          <th>Rebuy shares</th>
+          <th>Future value</th>
+          <th>Tranche P/L</th>
+          <th>Breakeven</th>
+        </tr>
+      </thead>
+      <tbody id="trancheBody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="9" style="color:var(--muted);font-size:0.72rem;font-weight:400;">All tranches + unsold held shares</td>
+          <td id="totalPLCell" colspan="2">—</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Calculation Breakdown -->
+  <div class="breakdown-wrap">
+    <div class="breakdown-title">Calculation Breakdown — How Future Value &amp; Global Breakeven are derived</div>
+    <pre id="calcBreakdown" style="color:var(--muted);font-size:0.72rem;">Enter values above to see the step-by-step derivation.</pre>
+  </div>
+
+  <script>
+    const NUM_TRANCHES = 8;
+    const STORAGE_KEY  = 'stockRepairScenarios_v3';
+
+    const defaultDrops   = [66, 54, 43, 35, 28, 20, 15, 8];
+    const defaultOffsets = [0,  1,  2,  3,  4,  5,  6,  7];
+
+    const $ = id => document.getElementById(id);
+
+    const origSharesEl          = $('origShares');
+    const origPriceEl           = $('origPrice');
+    const currentPriceEl        = $('currentPrice');
+    const futurePriceEl         = $('futurePrice');
+    const scenarioNameEl        = $('scenarioName');
+    const scenarioSelectEl      = $('scenarioSelect');
+    const globalBEBtn           = $('globalBreakevenBtn');
+    const futurePriceSlider     = $('futurePriceSlider');
+    const futurePriceSliderLabel= $('futurePriceSliderLabel');
+    const trancheBodyEl         = $('trancheBody');
+    const wfCanvas   = document.getElementById('waterfallChart');
+    const wfCtx      = wfCanvas.getContext('2d');
+    const sensCanvas = document.getElementById('sensitivityChart');
+    const sensCtx    = sensCanvas.getContext('2d');
+
+    let baseFuturePrice = Number(futurePriceEl.value) || 60;
+
+    // Execution state per tranche: 'pending' | 'sell_done' | 'sell_missed' | 'buy_missed'
+    // We track sell and buy independently
+    // sellState: true=done, false=missed
+    // buyState:  true=done, false=missed
+    // When shares=0, states are irrelevant
+    const execState = Array.from({length: NUM_TRANCHES}, () => ({
+      sellDone: true,
+      buyDone:  true
+    }));
+
+    // Per-tranche price locks: freeze sell/rebuy price independent of current price changes
+    const lockState = Array.from({length: NUM_TRANCHES}, () => ({
+      sellLocked: false, sellLockedPrice: null,
+      rebuyLocked: false, rebuyLockedPrice: null,
+    }));
+
+    function fmt(n, d=2)       { if (!isFinite(n)) return '—'; return Number(n).toLocaleString(undefined, {minimumFractionDigits:d, maximumFractionDigits:d}); }
+    function fmtDollar(n, d=0) { return '$' + fmt(n, d); }
+    function fmtPct(n, d=2)    { return (n>=0?'+':'') + fmt(n,d) + '%'; }
+
+    function resetSlider() {
+      baseFuturePrice = Number(futurePriceEl.value) || 0;
+      futurePriceSlider.value = 0;
+      futurePriceSliderLabel.textContent = '+0%';
+    }
+
+    // ── Build rows ──────────────────────────────────────────────────────
+    function createTrancheRow(i) {
+      const tr = document.createElement('tr');
+      tr.dataset.idx = i;
+      tr.innerHTML = `
+        <td>
+          <span class="tranche-badge">T${i+1}</span>
+          <div class="exec-btns" style="margin-top:5px;">
+            <button class="exec-btn sell-btn sell-done" data-i="${i}" title="Toggle: Did the SELL execute?">SELL ✓</button>
+            <button class="exec-btn buy-btn  buy-done"  data-i="${i}" title="Toggle: Did the REBUY trigger?">BUY ✓</button>
+          </div>
+        </td>
+        <td><input type="number" class="t-shares" min="0" step="1" value=""></td>
+        <td><input type="number" class="t-sellOffset" min="-100" max="100" step="0.5" value="${defaultOffsets[i]??0}"></td>
+        <td><div class="price-cell"><input type="number" class="t-sellPrice mono" step="0.01" placeholder="—"><button class="lock-btn t-sellLock" data-i="${i}" title="Lock sell price so it stops updating">🔓</button></div><div class="t-sellValue"></div></td>
+        <td><span class="t-loss mono dim">—</span></td>
+        <td><input type="number" class="t-drop" min="0" max="99" step="0.5" value="${defaultDrops[i]??40}"></td>
+        <td><div class="price-cell"><input type="number" class="t-rebuy mono" step="0.01" placeholder="—"><button class="lock-btn t-rebuyLock" data-i="${i}" title="Lock rebuy price so it stops updating">🔓</button></div><div class="t-rebuyValue"></div></td>
+        <td><span class="t-rebuyshares mono dim">—</span></td>
+        <td><span class="t-future mono dim">—</span></td>
+        <td><span class="t-pl mono dim">—</span><div class="t-scenario-tag" style="font-family:var(--mono);font-size:0.62rem;margin-top:2px;"></div></td>
+        <td>
+          <button class="be-btn t-beBtn">BE</button>
+          <div class="be-price-tag t-bePrice"></div>
+          <div class="to-be-tag t-toBE"></div>
+        </td>
+      `;
+      trancheBodyEl.appendChild(tr);
+
+      // Sell toggle
+      tr.querySelector('.sell-btn').addEventListener('click', () => {
+        execState[i].sellDone = !execState[i].sellDone;
+        recalc();
+      });
+      // Buy toggle
+      tr.querySelector('.buy-btn').addEventListener('click', () => {
+        execState[i].buyDone = !execState[i].buyDone;
+        recalc();
+      });
+      // Sell price lock
+      tr.querySelector('.t-sellLock').addEventListener('click', () => {
+        const ls = lockState[i];
+        if (!ls.sellLocked) {
+          const Pc2 = Number(currentPriceEl.value) || 0;
+          const off = Number(tr.querySelector('.t-sellOffset').value) || 0;
+          ls.sellLockedPrice = Pc2 * (1 + off / 100);
+          ls.sellLocked = true;
+        } else {
+          ls.sellLocked = false;
+          ls.sellLockedPrice = null;
+        }
+        recalc();
+      });
+      // Rebuy price lock
+      tr.querySelector('.t-rebuyLock').addEventListener('click', () => {
+        const ls = lockState[i];
+        if (!ls.rebuyLocked) {
+          const Pc2 = Number(currentPriceEl.value) || 0;
+          const d2  = Number(tr.querySelector('.t-drop').value) || 0;
+          ls.rebuyLockedPrice = Pc2 * (1 - d2 / 100);
+          ls.rebuyLocked = true;
+        } else {
+          ls.rebuyLocked = false;
+          ls.rebuyLockedPrice = null;
+        }
+        recalc();
+      });
+
+      // Direct sell price edit → back-calculate Sell Offset % (2 dp)
+      tr.querySelector('.t-sellPrice').addEventListener('input', function() {
+        const Pc2 = Number(currentPriceEl.value) || 0;
+        const newP = parseFloat(this.value);
+        if (!isNaN(newP) && newP > 0 && Pc2 > 0) {
+          tr.querySelector('.t-sellOffset').value = ((newP - Pc2) / Pc2 * 100).toFixed(2);
+          lockState[i].sellLocked = true;
+          lockState[i].sellLockedPrice = newP;
+        }
+        recalc();
+      });
+
+      // Direct rebuy price edit → back-calculate Drop % from curr (2 dp)
+      tr.querySelector('.t-rebuy').addEventListener('input', function() {
+        const Pc2 = Number(currentPriceEl.value) || 0;
+        const newP = parseFloat(this.value);
+        if (!isNaN(newP) && newP > 0 && Pc2 > 0) {
+          tr.querySelector('.t-drop').value = Math.max(0, (Pc2 - newP) / Pc2 * 100).toFixed(2);
+          lockState[i].rebuyLocked = true;
+          lockState[i].rebuyLockedPrice = newP;
+        }
+        recalc();
+      });
+    }
+
+    for (let i=0; i<NUM_TRANCHES; i++) createTrancheRow(i);
+
+    const tranches = Array.from(trancheBodyEl.querySelectorAll('tr')).map(row => ({
+      row,
+      sharesInput:     row.querySelector('.t-shares'),
+      sellOffsetInput: row.querySelector('.t-sellOffset'),
+      sellPriceSpan:   row.querySelector('.t-sellPrice'),
+      lossSpan:        row.querySelector('.t-loss'),
+      dropInput:       row.querySelector('.t-drop'),
+      rebuySpan:       row.querySelector('.t-rebuy'),
+      rebuySharesSpan: row.querySelector('.t-rebuyshares'),
+      futureSpan:      row.querySelector('.t-future'),
+      plSpan:          row.querySelector('.t-pl'),
+      scenarioTag:     row.querySelector('.t-scenario-tag'),
+      beBtn:           row.querySelector('.t-beBtn'),
+      bePriceDiv:      row.querySelector('.t-bePrice'),
+      toBEDiv:         row.querySelector('.t-toBE'),
+      sellBtn:         row.querySelector('.sell-btn'),
+      buyBtn:          row.querySelector('.buy-btn'),
+      sellLockBtn:     row.querySelector('.t-sellLock'),
+      sellValueDiv:    row.querySelector('.t-sellValue'),
+      rebuyLockBtn:    row.querySelector('.t-rebuyLock'),
+      rebuyValueDiv:   row.querySelector('.t-rebuyValue'),
+    }));
+
+    // ── Core compute ─────────────────────────────────────────────────────
+    function computeAll() {
+      const N0 = Number(origSharesEl.value)   || 0;
+      const P0 = Number(origPriceEl.value)    || 0;
+      const Pc = Number(currentPriceEl.value) || 0;
+      const Pf = Number(futurePriceEl.value)  || 0;
+      const V0 = N0 * P0;
+
+      const curHint = $('currentVsOrigHint');
+      if (P0>0 && Pc>0) {
+        const pct = (Pc-P0)/P0*100;
+        curHint.textContent = fmtPct(pct) + ' vs orig buy';
+        curHint.className = 'hint ' + (pct>=0?'pos':'neg');
+      } else { curHint.textContent=''; curHint.className='hint'; }
+
+      const fHint = $('futurePctHint');
+      if (Pc>0 && Pf>0) {
+        const pct = (Pf-Pc)/Pc*100;
+        fHint.textContent = fmtPct(pct) + ' from current';
+        fHint.className = 'hint ' + (pct>=0?'pos':'neg');
+      } else { fHint.textContent=''; fHint.className='hint'; }
+
+      // Clamp total sold
+      let totalSharesSold = tranches.reduce((s,t)=>s+(Number(t.sharesInput.value)||0),0);
+      if (totalSharesSold > N0) {
+        let excess = totalSharesSold - N0;
+        for (let i=tranches.length-1; i>=0&&excess>0; i--) {
+          const t  = tranches[i];
+          const Ns = Number(t.sharesInput.value)||0;
+          if (Ns>0) { const nNs=Math.max(0,Ns-excess); excess-=(Ns-nNs); t.sharesInput.value=nNs; }
+        }
+      }
+      totalSharesSold = tranches.reduce((s,t)=>s+(Number(t.sharesInput.value)||0),0);
+
+      // ── Per-tranche compute with exec states ──
+      let totalRealizedPL   = 0;
+      let totalOrigBook     = 0;
+      let totalRebuyBook    = 0;
+      let totalFutureValue  = 0;
+      let totalPL_tranches  = 0;
+      let sumRebuyShares    = 0;
+      let totalIdleCash     = 0;
+      let totalLockedLoss   = 0;
+      let totalMissedShares = 0;
+      // Unsold = shares never touched by any plan
+      let unsoldShares = Math.max(0, N0 - totalSharesSold);
+
+      // Shares "returned" to held pool because sell missed
+      let extraHeldShares = 0;
+
+      const trancheData = tranches.map((t, i) => {
+        const Ns        = Number(t.sharesInput.value)    ||0;
+        const offsetPct = Number(t.sellOffsetInput.value)||0;
+        const d         = Number(t.dropInput.value)      ||0;
+        if (Ns<=0||N0<=0||P0<=0||Pc<=0) return null;
+
+        const ls = lockState[i];
+        const Ps = (ls.sellLocked  && ls.sellLockedPrice  != null) ? ls.sellLockedPrice  : Pc*(1+offsetPct/100);
+        const Pb = (ls.rebuyLocked && ls.rebuyLockedPrice != null) ? ls.rebuyLockedPrice : Pc*(1-d/100);
+        const V_orig_tr   = Ns*P0;
+        const V_sell_tr   = Ns*Ps;
+        const Ltr         = V_sell_tr - V_orig_tr;   // sale P/L
+        const rebuyShares = Pb>0 ? Math.ceil(V_sell_tr/Pb) : 0;
+        const rebuyBook   = rebuyShares*Pb;
+
+        const es = execState[i];
+
+        // --- Scenario logic ---
+        // Case 1: SELL ✓, BUY ✓  → normal plan
+        // Case 2: SELL ✓, BUY ✗  → sold shares, cash idle, no rebuy → locked-in loss on that tranche
+        // Case 3: SELL ✗, BUY ✓  → ignored (can't buy if didn't sell; treat as SELL ✗ BUY ✗)
+        // Case 4: SELL ✗, BUY ✗  → nothing happened, shares still held at orig cost
+
+        let actualRealizedPL   = 0;
+        let actualRebuyBook    = 0;
+        let actualRebuyShares  = 0;
+        let actualFutureValue  = 0;
+        let actualPL           = 0;
+        let idleCash           = 0;
+        let scenarioLabel      = '';
+        let heldShares         = 0;  // shares still held at P0 cost basis
+
+        if (es.sellDone && es.buyDone) {
+          // Normal
+          actualRealizedPL  = Ltr;
+          actualRebuyBook   = rebuyBook;
+          actualRebuyShares = rebuyShares;
+          actualFutureValue = rebuyShares * Pf;
+          actualPL          = Ltr + (actualFutureValue - rebuyBook);
+          scenarioLabel     = '';
+        } else if (es.sellDone && !es.buyDone) {
+          // Sold but rebuy never triggered → cash idle, locked loss
+          actualRealizedPL  = Ltr;
+          actualRebuyBook   = 0;
+          actualRebuyShares = 0;
+          actualFutureValue = 0;
+          idleCash          = V_sell_tr;          // proceeds sitting as cash
+          actualPL          = Ltr;                // only the sale P/L, no future upside
+          totalLockedLoss  += Ltr;               // if negative this IS the locked-in loss
+          totalMissedShares+= rebuyShares;
+          scenarioLabel     = '⚠ No rebuy — cash idle';
+        } else {
+          // Sell missed (with or without buy toggle) → treat as if nothing happened
+          // Shares stay held at original cost — track ONLY via actualRebuyShares (no heldShares)
+          actualRealizedPL  = 0;
+          actualRebuyBook   = V_orig_tr;          // still on books at orig cost
+          actualRebuyShares = Ns;                 // still holding original shares
+          actualFutureValue = Ns * Pf;
+          actualPL          = Ns * (Pf - P0);    // unrealised, holds at orig cost
+          heldShares        = 0;                  // DO NOT double-count — already in actualRebuyShares
+          idleCash          = 0;
+          extraHeldShares  += Ns;                 // display-only counter
+          scenarioLabel     = '— Sell not triggered';
+        }
+
+        totalRealizedPL  += actualRealizedPL;
+        totalOrigBook    += V_orig_tr;
+        totalRebuyBook   += actualRebuyBook;
+        totalFutureValue += actualFutureValue;
+        totalPL_tranches += actualPL;
+        sumRebuyShares   += actualRebuyShares;    // heldShares removed — was causing double-count
+        totalIdleCash    += idleCash;
+
+        const trancheBE = actualRebuyShares > 0
+          ? actualRebuyBook/actualRebuyShares - actualRealizedPL/actualRebuyShares
+          : (heldShares > 0 ? P0 : null);
+
+        return {
+          Ns, Ps, V_orig_tr, V_sell_tr, Ltr, Pb,
+          rebuyShares: actualRebuyShares,
+          rebuyBook: actualRebuyBook,
+          futureValue: actualFutureValue,
+          PL_total: actualPL,
+          trancheBE,
+          idleCash,
+          heldShares,
+          scenarioLabel,
+          sellDone: es.sellDone,
+          buyDone:  es.buyDone,
+        };
+      });
+
+      // Unsold: shares never allocated to any tranche (plain N0 - totalSharesSold)
+      // NOTE: sell-missed tranche shares are already tracked in totalRebuyBook / sumRebuyShares above
+      const unsoldNotional    = unsoldShares * P0;
+      const unsoldFutureValue = unsoldShares * Pf;
+      const PL_unsold         = unsoldShares * (Pf - P0);
+
+      // Global breakeven: Pf where PL_total_all = 0
+      // Coefficient of Pf = all shares that will appreciate/depreciate with market
+      const pfCoeff   = sumRebuyShares + unsoldShares;
+      const constPart    = totalRebuyBook + unsoldNotional - totalRealizedPL;
+      const globalBE     = pfCoeff > 0 ? constPart / pfCoeff : null;
+      // Idle-adjusted BE: idle cash counts toward account recovery → shares need less upside
+      const globalBE_idle = (pfCoeff > 0 && totalIdleCash > 0)
+                            ? (constPart - totalIdleCash) / pfCoeff
+                            : globalBE;
+
+      globalBEBtn.onclick = () => {
+        const beUse = (totalIdleCash > 0 && globalBE_idle !== null) ? globalBE_idle : globalBE;
+        if (beUse !== null && isFinite(beUse)) {
+          futurePriceEl.value = fmt(beUse, 4).replace(/,/g, '');
+          resetSlider(); recalc();
+        }
+      };
+
+      // ── Render rows ──
+      tranches.forEach((t, i) => {
+        const d  = trancheData[i];
+        const es = execState[i];
+        const Ns = Number(t.sharesInput.value)||0;
+        const hasShares = Ns > 0;
+
+        // Update sell/buy button visuals
+        t.sellBtn.className = 'exec-btn sell-btn ' + (es.sellDone ? 'sell-done' : 'sell-missed');
+        t.sellBtn.textContent = es.sellDone ? 'SELL ✓' : 'SELL ✗';
+        t.buyBtn.className  = 'exec-btn buy-btn '  + (es.buyDone  ? 'buy-done'  : 'buy-missed');
+        t.buyBtn.textContent  = es.buyDone  ? 'BUY ✓'  : 'BUY ✗';
+
+        // Dim buy button when sell didn't happen
+        t.buyBtn.style.opacity = (!es.sellDone) ? '0.35' : '1';
+        t.buyBtn.title = !es.sellDone ? 'N/A — sell not triggered' : 'Toggle: Did the REBUY trigger?';
+
+        // Row highlight
+        t.row.classList.remove('inactive','active','sell-missed-row','buy-missed-row','both-missed-row');
+        if (!hasShares || !d) {
+          t.row.classList.add('inactive');
+        } else if (!es.sellDone) {
+          t.row.classList.add('sell-missed-row');
+        } else if (!es.buyDone) {
+          t.row.classList.add('buy-missed-row');
+        } else {
+          t.row.classList.add('active');
+        }
+
+        if (!d || !hasShares) {
+          const ls0 = lockState[i];
+          if (document.activeElement !== t.sellPriceSpan)
+            t.sellPriceSpan.value  = ls0.sellLocked  ? ls0.sellLockedPrice.toFixed(4) : '';
+          if (document.activeElement !== t.rebuySpan)
+            t.rebuySpan.value      = ls0.rebuyLocked ? ls0.rebuyLockedPrice.toFixed(4) : '';
+          if (t.sellValueDiv)  t.sellValueDiv.textContent  = '';
+          if (t.rebuyValueDiv) t.rebuyValueDiv.textContent = '';
+          t.lossSpan.textContent        = '—';
+          t.rebuySharesSpan.textContent = '—';
+          t.futureSpan.textContent      = '—';
+          t.plSpan.textContent          = '—';
+          t.scenarioTag.textContent     = '';
+          t.bePriceDiv.textContent      = '';
+          t.toBEDiv.textContent         = '';
+          t.plSpan.className = 't-pl mono dim';
+          t.sellLockBtn.className  = 'lock-btn t-sellLock'  + (ls0.sellLocked  ? ' locked' : '');
+          t.sellLockBtn.textContent  = ls0.sellLocked  ? '🔒' : '🔓';
+          t.sellLockBtn.title = ls0.sellLocked ? `🔒 Locked @ ${fmtDollar(ls0.sellLockedPrice,4)} — click to unlock` : 'Lock sell price at current value';
+          t.rebuyLockBtn.className = 'lock-btn t-rebuyLock' + (ls0.rebuyLocked ? ' locked' : '');
+          t.rebuyLockBtn.textContent = ls0.rebuyLocked ? '🔒' : '🔓';
+          t.rebuyLockBtn.title = ls0.rebuyLocked ? `🔒 Locked @ ${fmtDollar(ls0.rebuyLockedPrice,4)} — click to unlock` : 'Lock rebuy price at current value';
+          return;
+        }
+
+        const { Ps, V_orig_tr, V_sell_tr, Ltr, Pb, rebuyShares, futureValue, PL_total, trancheBE, scenarioLabel, idleCash } = d;
+        const pct = V0!==0 ? (PL_total/V0)*100 : 0;
+        const ls = lockState[i];
+
+        // Sell price — show locked value or live computed value
+        const Ps_disp = ls.sellLocked ? ls.sellLockedPrice : Ps;
+        if (document.activeElement !== t.sellPriceSpan)
+          t.sellPriceSpan.value = Ps_disp.toFixed(4);
+        // sync locked CSS class
+        t.sellPriceSpan.classList.toggle('locked', ls.sellLocked);
+        if (t.sellValueDiv) t.sellValueDiv.textContent = es.sellDone
+          ? 'Sell val: ' + fmtDollar(Ns * Ps_disp, 0) : '';
+        t.sellLockBtn.className   = 'lock-btn t-sellLock'  + (ls.sellLocked  ? ' locked' : '');
+        t.sellLockBtn.textContent   = ls.sellLocked  ? '🔒' : '🔓';
+        t.sellLockBtn.title = ls.sellLocked ? `🔒 Locked @ ${fmtDollar(ls.sellLockedPrice,4)} — click to unlock` : 'Lock sell price at current value';
+
+        t.lossSpan.textContent        = (Ltr>=0?'+':'') + fmtDollar(Ltr,2);
+        t.lossSpan.className          = 't-loss mono ' + (es.sellDone ? (Ltr>=0?'pos':'neg') : 'dim');
+
+        // Rebuy price — show locked value or live computed value
+        const Pb_disp = ls.rebuyLocked ? ls.rebuyLockedPrice : Pb;
+        if (document.activeElement !== t.rebuySpan)
+          t.rebuySpan.value = Pb_disp.toFixed(4);
+        // sync locked CSS class
+        t.rebuySpan.classList.toggle('locked', ls.rebuyLocked);
+        t.rebuySpan.className   = 't-rebuy mono ' + (ls.rebuyLocked ? 'warn' : (!es.sellDone ? 'dim' : es.buyDone ? '' : 'warn'));
+        if (t.rebuyValueDiv) t.rebuyValueDiv.textContent = (es.sellDone && es.buyDone)
+          ? 'Rebuy val: ' + fmtDollar(d.rebuyShares * Pb_disp, 0) : '';
+        t.rebuyLockBtn.className  = 'lock-btn t-rebuyLock' + (ls.rebuyLocked ? ' locked' : '');
+        t.rebuyLockBtn.textContent  = ls.rebuyLocked ? '🔒' : '🔓';
+        t.rebuyLockBtn.title = ls.rebuyLocked ? `🔒 Locked @ ${fmtDollar(ls.rebuyLockedPrice,4)} — click to unlock` : 'Lock rebuy price at current value';
+
+        t.rebuySharesSpan.textContent = es.sellDone && es.buyDone ? fmt(rebuyShares,0)+' sh' : (es.sellDone ? '— no fill' : fmt(d.Ns,0)+' sh held');
+        t.futureSpan.textContent      = fmtDollar(futureValue,0);
+
+        const sign = PL_total>=0?'+':'';
+        t.plSpan.textContent  = sign + fmtDollar(PL_total,0) + '  (' + fmtPct(pct,2) + ')';
+        t.plSpan.className    = 't-pl mono ' + (PL_total>0?'pos':PL_total<0?'neg':'');
+
+        // Scenario tag
+        t.scenarioTag.textContent = scenarioLabel;
+        t.scenarioTag.style.color = !es.sellDone ? 'var(--muted)' : (idleCash>0 ? 'var(--orange)' : '');
+
+        if (trancheBE!==null && isFinite(trancheBE)) {
+          t.bePriceDiv.textContent = 'BE ' + fmtDollar(trancheBE,4);
+          if (Pf>0) {
+            const toBEPct = (trancheBE-Pf)/Pf*100;
+            t.toBEDiv.textContent = fmtPct(toBEPct,1) + ' to BE';
+            t.toBEDiv.style.color = toBEPct<=0 ? 'var(--green)' : 'var(--yellow)';
+          }
+        } else {
+          t.bePriceDiv.textContent = '';
+          t.toBEDiv.textContent    = '';
+        }
+
+        t.beBtn.onclick = () => {
+          if (trancheBE!==null && isFinite(trancheBE)) {
+            futurePriceEl.value = fmt(trancheBE,4).replace(/,/g,'');
+            resetSlider(); recalc();
+          }
+        };
+      });
+
+      // ── Stat Cards ──
+      const newCostBasis   = totalRebuyBook + unsoldNotional;
+      const newFutureValue = totalFutureValue + unsoldFutureValue;
+      const PL_total_all   = totalPL_tranches + PL_unsold;
+      // PL_vs_orig: direct comparison of future portfolio value vs original investment.
+      // This correctly captures the whole-share rounding surplus (e.g. +$5.42)
+      // that PL_total_all misses because PL_total_all is always exactly 0 at globalBE.
+      const PL_vs_orig     = newFutureValue - V0;
+      const pctTot         = V0!==0 ? (PL_vs_orig/V0)*100 : 0;
+      const totalSharesAfter = sumRebuyShares + unsoldShares;
+
+      $('sc-origBook').textContent    = fmtDollar(V0,0);
+      $('sc-origBookSub').textContent = fmt(N0,0)+' sh × '+fmtDollar(P0,2);
+
+      // Current Book Value = current price × all shares now held
+      const currBookValue = totalSharesAfter * Pc;
+      const pctCurrVsOrig = V0 !== 0 ? (currBookValue - V0) / V0 * 100 : 0;
+      const currBookEl  = $('sc-currBook');
+      const currBookSub = $('sc-currBookSub');
+      const currBookCard = document.getElementById('sc-currBookCard');
+      currBookEl.textContent  = fmtDollar(currBookValue, 0);
+      currBookEl.className    = 'value ' + (currBookValue > V0 ? 'pos' : currBookValue < V0 ? 'neg' : '');
+      currBookSub.textContent = fmt(totalSharesAfter,0)+' sh @ '+fmtDollar(Pc,2)
+                               +' ('+fmtPct(pctCurrVsOrig,1)+' vs orig)';
+      currBookCard.className  = 'stat-card ' + (currBookValue > V0 ? 'pos' : currBookValue < V0 ? 'neg' : 'neutral');
+      const currBookPL    = currBookValue - V0;
+      const currBookPLEl  = $('sc-currBookPL');
+      const plSign        = currBookPL >= 0 ? '+' : '';
+      currBookPLEl.textContent = 'P/L: ' + plSign + fmtDollar(currBookPL, 0)
+                                + ' (' + fmtPct(pctCurrVsOrig, 1) + ')';
+      currBookPLEl.className   = 'sub ' + (currBookPL > 0 ? 'pos' : currBookPL < 0 ? 'neg' : '');
+
+      $('sc-sold').textContent    = fmt(totalSharesSold,0)+' sh';
+      $('sc-soldSub').textContent = fmt(unsoldShares,0)+' sh held';
+
+      const rEl = $('sc-realizedPL');
+      rEl.textContent = (totalRealizedPL>=0?'+':'')+fmtDollar(totalRealizedPL,0);
+      rEl.className   = 'value '+(totalRealizedPL>0?'pos':totalRealizedPL<0?'neg':'');
+
+      $('sc-newBasis').textContent  = fmtDollar(newCostBasis,0);
+      const futureValEl  = $('sc-futureVal');
+      const futureValSub = $('sc-futureValSub');
+      futureValEl.textContent  = fmtDollar(newFutureValue, 0);
+      futureValSub.textContent = fmt(totalSharesAfter, 0) + ' sh total · ' + fmt(sumRebuyShares, 0) + ' rebuyed + ' + fmt(unsoldShares, 0) + ' held';
+      const fvIdleEl = $('sc-futureValIdleSub');
+      if (fvIdleEl) {
+        if (totalIdleCash > 0) {
+          const fvWithIdle = newFutureValue + totalIdleCash;
+          fvIdleEl.textContent = 'Incl. idle cash: ' + fmtDollar(fvWithIdle, 0);
+          fvIdleEl.className = 'sub ' + (fvWithIdle >= V0 ? 'pos' : 'neg');
+          fvIdleEl.style.display = '';
+        } else { fvIdleEl.style.display = 'none'; }
+      }
+      // Colour the Future Value card to indicate whether it covers orig book
+      const fvCard = futureValEl.closest('.stat-card');
+      fvCard.className = 'stat-card ' + (newFutureValue >= V0 ? 'pos' : 'neg');
+
+      const plEl=$('sc-totalPL'), plSub=$('sc-totalPLSub');
+      plEl.textContent  = (PL_vs_orig>=0?'+':'')+fmtDollar(PL_vs_orig,2);
+      plEl.className    = 'value '+(PL_vs_orig>0?'pos':PL_vs_orig<0?'neg':'');
+      plSub.textContent = fmtPct(pctTot,2)+' of orig book';
+      const card=$('sc-totalPLCard');
+      card.className='stat-card '+(PL_vs_orig>0?'pos':PL_vs_orig<0?'neg':'neutral');
+      const plIdleEl = $('sc-totalPLIdleSub');
+      if (plIdleEl) {
+        if (totalIdleCash > 0) {
+          const PL_idle = PL_vs_orig + totalIdleCash;
+          const pct_idle = V0 ? PL_idle / V0 * 100 : 0;
+          plIdleEl.textContent = 'Incl. idle: ' + (PL_idle >= 0 ? '+' : '') + fmtDollar(PL_idle, 0) + ' (' + fmtPct(pct_idle, 2) + ')';
+          plIdleEl.className = 'sub ' + (PL_idle >= 0 ? 'pos' : 'neg');
+          plIdleEl.style.display = '';
+        } else { plIdleEl.style.display = 'none'; }
+      }
+
+      // Idle cash card
+      const idleCard = $('sc-idleCashCard');
+      $('sc-idleCash').textContent  = fmtDollar(totalIdleCash,0);
+      $('sc-idleCashSub').textContent = totalIdleCash>0 ? fmt(totalMissedShares,0)+' planned rebuy sh missed' : 'no missed rebuys';
+      idleCard.className = 'stat-card '+(totalIdleCash>0?'warn':'neutral');
+
+      const beEl=$('sc-globalBE'), beSub=$('sc-globalBESub');
+      const beShow = (totalIdleCash > 0 && globalBE_idle !== null) ? globalBE_idle : globalBE;
+      if (beShow !== null && isFinite(beShow)) {
+        beEl.textContent  = fmtDollar(beShow, 4);
+        const bePct = Pc > 0 ? (beShow - Pc) / Pc * 100 : 0;
+        beSub.textContent = fmtPct(bePct, 2) + ' from current' + (totalIdleCash > 0 ? ' (idle adj.)' : '');
+        beEl.className = 'value accent';
+      } else {
+        beEl.textContent  = '—';
+        beSub.textContent = '';
+      }
+      const beIdleEl = $('sc-globalBEIdleSub');
+      if (beIdleEl) {
+        if (totalIdleCash > 0 && globalBE !== null && isFinite(globalBE) && globalBE_idle !== null) {
+          const saving = globalBE - globalBE_idle;
+          beIdleEl.textContent = 'Without idle cash: ' + fmtDollar(globalBE, 4) + ' (saves $' + Math.abs(saving).toFixed(2) + '/sh)';
+          beIdleEl.style.display = '';
+        } else { beIdleEl.style.display = 'none'; }
+      }
+
+      // Footer total P/L
+      const totalPLCell = $('totalPLCell');
+      totalPLCell.textContent  = (PL_vs_orig>=0?'+':'')+fmtDollar(PL_vs_orig,2)+'  ('+fmtPct(pctTot,2)+')';
+      totalPLCell.className    = PL_vs_orig>0?'pos':PL_vs_orig<0?'neg':'';
+
+      // Idle cash banner
+      const banner = $('idleCashBar');
+      if (totalIdleCash > 0) {
+        banner.classList.add('visible');
+        $('idleCashAmt').textContent   = fmtDollar(totalIdleCash,0);
+        $('lockedLossAmt').textContent = (totalLockedLoss>=0?'+':'')+fmtDollar(totalLockedLoss,0);
+        $('missedShares').textContent  = fmt(totalMissedShares,0)+' sh';
+      } else {
+        banner.classList.remove('visible');
+      }
+
+      return { N0, P0, Pc, Pf, V0, globalBE, globalBE_idle, pfCoeff, constPart,
+               PL_total_all, PL_vs_orig, pctTot, newCostBasis, newFutureValue,
+               totalFutureValue, sumRebuyShares, unsoldShares,
+               totalSharesAfter, totalRebuyBook, unsoldNotional,
+               totalRealizedPL, totalIdleCash, extraHeldShares };
+    }
+
+    // ── Waterfall Chart ───────────────────────────────────────────────────
+    function drawWaterfall(data) {
+      if (!data) return;
+      const { V0, totalRealizedPL, totalIdleCash, newCostBasis,
+              totalSharesAfter, Pc, Pf } = data;
+      if (!V0) { wfCtx.clearRect(0,0,wfCanvas.width,wfCanvas.height); return; }
+
+      const currBookValue  = totalSharesAfter * Pc;
+      const unrealized     = currBookValue - newCostBasis;
+      const idleDrag       = -totalIdleCash;
+
+      // bars: [label, delta, isTotal, color]
+      const BARS = [
+        { label:'Orig Book',    val: V0,              isTotal:true,  hex:'#00d4ff' },
+        { label:'Realized P/L', val: totalRealizedPL, isTotal:false, hex: totalRealizedPL>=0?'#00e676':'#ff4c6a' },
+        { label:'Idle Cash',    val: idleDrag,         isTotal:false, hex: idleDrag<0?'#ff9800':'#5a7080' },
+        { label:'Unrealized',   val: unrealized,       isTotal:false, hex: unrealized>=0?'#00e676':'#ff4c6a' },
+        { label:'Curr Book',    val: currBookValue,    isTotal:true,  hex: currBookValue>=V0?'#00e676':'#ff4c6a' },
+      ];
+
+      const W = wfCanvas.offsetWidth || 600, H = 200;
+      wfCanvas.width = W; wfCanvas.height = H;
+      const cx = wfCtx;
+      cx.clearRect(0,0,W,H);
+
+      const PAD_L=8, PAD_R=8, PAD_T=28, PAD_B=42;
+      const chartW = W - PAD_L - PAD_R;
+      const chartH = H - PAD_T - PAD_B;
+      const n = BARS.length;
+      const bw = Math.floor(chartW / n * 0.6);
+      const gap = Math.floor(chartW / n);
+
+      // running totals for float bars
+      let running = 0;
+      const drawBars = [];
+      for (const b of BARS) {
+        if (b.isTotal) {
+          drawBars.push({ ...b, base: 0, top: b.val });
+          running = b.val;
+        } else {
+          drawBars.push({ ...b, base: running, top: running + b.val });
+          running += b.val;
+        }
+      }
+
+      // scale
+      const allVals = drawBars.flatMap(b => [b.base, b.top]);
+      let minV = Math.min(0, ...allVals);
+      let maxV = Math.max(...allVals);
+      const range = (maxV - minV) || 1;
+      const scale = chartH / range;
+      const yZero = PAD_T + (maxV / range) * chartH;
+
+      function yOf(v) { return PAD_T + (maxV - v) / range * chartH; }
+      function xOf(i) { return PAD_L + i * gap + (gap - bw) / 2; }
+
+      // zero line
+      cx.strokeStyle = 'rgba(255,255,255,0.12)';
+      cx.setLineDash([3,3]); cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(PAD_L, yZero); cx.lineTo(W-PAD_R, yZero); cx.stroke();
+      cx.setLineDash([]);
+
+      // connector dashes between float bars
+      for (let i=0; i<drawBars.length-1; i++) {
+        const b = drawBars[i];
+        const x1 = xOf(i) + bw;
+        const x2 = xOf(i+1);
+        const yConn = yOf(b.isTotal ? b.top : b.top);
+        cx.strokeStyle = 'rgba(255,255,255,0.13)';
+        cx.setLineDash([2,3]); cx.lineWidth=1;
+        cx.beginPath(); cx.moveTo(x1, yConn); cx.lineTo(x2, yConn); cx.stroke();
+        cx.setLineDash([]);
+      }
+
+      // bars
+      drawBars.forEach((b, i) => {
+        const x   = xOf(i);
+        const yT  = yOf(Math.max(b.base, b.top));
+        const yB  = yOf(Math.min(b.base, b.top));
+        const barH = Math.max(2, yB - yT);
+
+        // fill with alpha
+        cx.fillStyle = b.hex + 'cc';
+        cx.fillRect(x, yT, bw, barH);
+        // border
+        cx.strokeStyle = b.hex;
+        cx.lineWidth = 1.5;
+        cx.strokeRect(x, yT, bw, barH);
+
+        // value label above/below bar
+        const _absVal = Math.abs(b.isTotal ? b.top : b.val);
+        const label  = (b.val < 0 && !b.isTotal ? '−' : '') + fmtDollar(_absVal, 0);
+        cx.fillStyle  = b.hex;
+        cx.font       = 'bold 9px JetBrains Mono';
+        cx.textAlign  = 'center';
+        const labelY  = b.val >= 0 ? yT - 4 : yB + 10;
+        cx.fillText(label, x + bw/2, labelY);
+
+        // x-axis label
+        cx.fillStyle  = '#8a9db0';
+        cx.font       = '8.5px JetBrains Mono';
+        cx.fillText(b.label, x + bw/2, H - PAD_B + 14);
+
+        // delta label below bar label for non-total bars
+        if (!b.isTotal && b.val !== 0) {
+          const pct = V0 ? (b.val / V0 * 100) : 0;
+          const pctStr = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+          cx.fillStyle = b.hex + 'aa';
+          cx.font = '7.5px JetBrains Mono';
+          cx.fillText(pctStr, x + bw/2, H - PAD_B + 25);
+        }
+      });
+    }
+
+    // ── Sensitivity Chart ─────────────────────────────────────────────────
+    function drawSensitivity(data) {
+      if (!data) return;
+      const { V0, P0, Pc, unsoldShares, globalBE } = data;
+      if (!V0) { sensCtx.clearRect(0,0,sensCanvas.width,sensCanvas.height); return; }
+
+      const W = sensCanvas.offsetWidth || 600, H = 210;
+      sensCanvas.width = W; sensCanvas.height = H;
+      const cx = sensCtx;
+      cx.clearRect(0,0,W,H);
+
+      // ── Price range: Pc is ~20% from left; auto-expand right to fit Pf & globalBE ──
+      const Pf       = Number(futurePriceEl.value) || 0;
+      const Pmin     = Math.max(0.01, Pc * 0.80);          // small left shoulder
+      let   PmaxBase = Pc * 2.1;                            // default right extent
+      const mustFit  = [Pf, globalBE].filter(v => v !== null && isFinite(v) && v > PmaxBase);
+      if (mustFit.length) PmaxBase = Math.max(...mustFit) * 1.12;  // +12% right padding
+      const Pmax = PmaxBase;
+      const STEPS = 100;
+
+      // Four scenarios
+      const scenarios = [
+        { label: 'All Fills (ideal)',  hex: '#00e676', sellOver: true,  buyOver: true  },
+        { label: 'Current State',      hex: '#00d4ff', sellOver: null,  buyOver: null  },
+        { label: 'All Rebuys Missed',  hex: '#ff9800', sellOver: true,  buyOver: false },
+        { label: 'All Sells Missed',   hex: '#ff4c6a', sellOver: false, buyOver: false },
+      ];
+
+      function evalPL(p, sellOver, buyOver) {
+        let pl = 0;
+        tranches.forEach((t, i) => {
+          const Ns = Number(t.sharesInput.value) || 0;
+          if (!Ns) return;
+          const sellDone = sellOver !== null ? sellOver : execState[i].sellDone;
+          const buyDone  = buyOver  !== null ? buyOver  : execState[i].buyDone;
+          const off = Number(t.sellOffsetInput.value) || 0;
+          const d   = Number(t.dropInput.value) || 0;
+          const ls  = lockState[i];
+          const Ps  = ls.sellLocked && ls.sellLockedPrice ? ls.sellLockedPrice : Pc*(1+off/100);
+          const Pb  = ls.rebuyLocked && ls.rebuyLockedPrice ? ls.rebuyLockedPrice : Pc*(1-d/100);
+          const Vst = Ns * Ps;
+          const Ltr = Vst - Ns * P0;
+          const rSh = Pb > 0 ? Math.ceil(Vst / Pb) : 0;
+          if (sellDone && buyDone)       { pl += Ltr + rSh*(p - Pb); }
+          else if (sellDone && !buyDone) { pl += Ltr; }
+          else                           { pl += Ns*(p - P0); }
+        });
+        pl += unsoldShares * (p - P0);
+        return pl;
+      }
+
+      // Build curve points
+      const allPts = scenarios.map(sc => {
+        const pts = [];
+        for (let s=0; s<=STEPS; s++) {
+          const p = Pmin + (Pmax - Pmin) * (s / STEPS);
+          pts.push({ p, pl: evalPL(p, sc.sellOver, sc.buyOver) });
+        }
+        return pts;
+      });
+
+      const allPLs = allPts.flat().map(x => x.pl);
+      const minPL  = Math.min(0, ...allPLs);
+      const maxPL  = Math.max(...allPLs);
+      const range  = (maxPL - minPL) || 1;
+      const PAD = 18, PAD_B = 24;
+      const chartH = H - PAD - PAD_B;
+      const chartW = W - 2*PAD;
+
+      function xOf(p)  { return PAD + (p - Pmin) / (Pmax - Pmin) * chartW; }
+      function yOf(pl) { return PAD + (1 - (pl - minPL) / range) * chartH; }
+
+      // ── Zero line ──
+      if (minPL < 0 && maxPL > 0) {
+        const y0 = yOf(0);
+        cx.strokeStyle = 'rgba(255,255,255,0.1)';
+        cx.setLineDash([4,4]); cx.lineWidth=1;
+        cx.beginPath(); cx.moveTo(PAD, y0); cx.lineTo(W-PAD, y0); cx.stroke();
+        cx.setLineDash([]);
+        cx.fillStyle='rgba(255,255,255,0.25)'; cx.font='8px JetBrains Mono';
+        cx.textAlign='left'; cx.fillText('$0', PAD+3, y0-3);
+      }
+
+      // ── Draw curves: back-to-front so Current State renders on top ──
+      [3, 0, 2, 1].forEach(i => {
+        const sc  = scenarios[i];
+        const pts = allPts[i];
+        cx.strokeStyle = sc.hex;
+        cx.lineWidth   = i === 1 ? 2.5 : 1.5;
+        cx.globalAlpha = i === 1 ? 1.0 : 0.72;
+        cx.setLineDash(i === 1 || i === 0 ? [] : [4, 3]);
+        cx.beginPath();
+        pts.forEach((pt, j) => {
+          const x = xOf(pt.p), y = yOf(pt.pl);
+          j === 0 ? cx.moveTo(x, y) : cx.lineTo(x, y);
+        });
+        cx.stroke();
+        cx.setLineDash([]);
+        cx.globalAlpha = 1;
+      });
+
+      // ── Helper: draw a labelled vertical price marker ──
+      function vMarker(price, color, topLabel, subLabel, dashPat, labelSide) {
+        if (price < Pmin || price > Pmax) return;
+        const x = xOf(price);
+        cx.strokeStyle = color; cx.lineWidth = 1; cx.setLineDash(dashPat);
+        cx.beginPath(); cx.moveTo(x, PAD); cx.lineTo(x, H - PAD_B); cx.stroke();
+        cx.setLineDash([]);
+        cx.fillStyle = color; cx.font = 'bold 9px JetBrains Mono';
+        cx.textAlign = labelSide === 'right' ? 'left' : 'right';
+        const lx = labelSide === 'right' ? x + 3 : x - 3;
+        cx.fillText(topLabel, lx, PAD + 10);
+        if (subLabel) {
+          cx.font = '7.5px JetBrains Mono';
+          cx.fillText(subLabel, lx, PAD + 21);
+        }
+      }
+
+      // ── Current price marker ──
+      vMarker(Pc, 'rgba(0,212,255,0.7)', 'curr', fmtDollar(Pc,2), [3,3], 'right');
+
+      // ── Global Breakeven marker (yellow/gold) ──
+      if (globalBE !== null && isFinite(globalBE)) {
+        vMarker(globalBE, '#ffd740', 'BE', fmtDollar(globalBE,2), [4,3], 'right');
+      }
+
+      // ── Future price marker (green) ──
+      if (Pf > 0) {
+        const side = (globalBE !== null && isFinite(globalBE) && Math.abs(Pf - globalBE) / (Pmax - Pmin) < 0.06)
+                     ? 'left' : 'right';
+        vMarker(Pf, '#00e676', 'future', fmtDollar(Pf,2), [3,3], side);
+      }
+
+      // ── X-axis price tick labels ──
+      cx.fillStyle='#5a7080'; cx.font='8px JetBrains Mono'; cx.textAlign='center';
+      for (let i=0; i<=4; i++) {
+        const p = Pmin + (Pmax - Pmin) * (i / 4);
+        cx.fillText(fmtDollar(p, 2), xOf(p), H - PAD_B + 13);
+      }
+
+      // ── Legend ──
+      const legEl = document.getElementById('sensLegend');
+      if (legEl) {
+        legEl.innerHTML = scenarios.map(sc =>
+          `<span style="display:flex;align-items:center;gap:5px;">
+             <span style="width:18px;height:2px;background:${sc.hex};display:inline-block;border-radius:2px;"></span>
+             <span>${sc.label}</span>
+           </span>`
+        ).join('') +
+        `<span style="display:flex;align-items:center;gap:5px;margin-left:8px;">
+           <span style="width:12px;height:2px;background:#ffd740;display:inline-block;border-radius:2px;"></span>
+           <span style="color:#ffd740;">Global BE</span>
+         </span>`;
+      }
+    }
+    // ── Main recalc ───────────────────────────────────────────────────────
+    function recalc() {
+      const data = computeAll();
+      drawWaterfall(data);
+      drawSensitivity(data);
+      renderBreakdown(data);
+    }
+
+    // ── Calculation Breakdown Panel ───────────────────────────────────────
+    function renderBreakdown(d) {
+      const el = $('calcBreakdown');
+      if (!d || !d.V0) { el.textContent = ''; return; }
+      const { N0, P0, Pc, Pf, V0, globalBE, globalBE_idle, pfCoeff, constPart,
+              PL_total_all, pctTot, newCostBasis, newFutureValue,
+              totalRebuyBook, unsoldNotional, totalRealizedPL,
+              sumRebuyShares, unsoldShares, totalSharesAfter,
+              totalIdleCash } = d;
+
+      const sign = v => (v >= 0 ? '+' : '') + fmtDollar(v, 2);
+      const pf   = Pf > 0 ? fmtDollar(Pf, 4) : '(no future price)';
+      const be   = (globalBE !== null && isFinite(globalBE)) ? fmtDollar(globalBE, 4) : '—';
+
+      el.innerHTML = `
+<span style="color:var(--accent);font-weight:600;">── FUTURE VALUE  at  Pf = ${pf} ─────────────────────────────</span>
+
+  Rebuyed / held-in-plan shares :  ${fmt(sumRebuyShares, 0)} sh  ×  ${pf}  =  ${fmtDollar(sumRebuyShares * Pf, 2)}
+  Plain unsold shares            :  ${fmt(unsoldShares, 0)} sh  ×  ${pf}  =  ${fmtDollar(unsoldShares * Pf, 2)}
+  <span style="color:var(--border2)">───────────────────────────────────────────────────────────</span>
+  Total Future Value             :  ${fmt(totalSharesAfter, 0)} sh  ×  ${pf}  =  <span style="color:var(--green);font-weight:600;">${fmtDollar(newFutureValue, 2)}</span>
+  Original Book                  :  ${fmt(N0, 0)} sh  ×  ${fmtDollar(P0, 4)}  =  ${fmtDollar(V0, 2)}
+  Difference (Future − Orig)     :  <span style="${newFutureValue >= V0 ? 'color:var(--green)' : 'color:var(--red)'}">${sign(newFutureValue - V0)}</span>
+
+<span style="color:var(--accent);font-weight:600;">── GLOBAL BREAKEVEN  derivation ─────────────────────────────</span>
+
+  Goal: find Pf* where Total P&amp;L = 0, i.e. Future Value = adjusted cost
+
+  <span style="color:var(--muted);">Numerator  (cost to recover):</span>
+    Rebuy cost basis   (all tranches)  :  ${fmtDollar(totalRebuyBook, 2)}
+  + Unsold notional   (orig cost held) :  ${fmtDollar(unsoldNotional, 2)}
+  − Realized P/L already locked in    :  ${sign(totalRealizedPL)}
+  <span style="color:var(--border2)">  ───────────────────────────────────</span>
+  = Const part                         :  <span style="font-weight:600;">${fmtDollar(constPart, 2)}</span>${totalIdleCash > 0 ? `\n  ⚠ Idle cash (missed rebuys)        :  ${fmtDollar(totalIdleCash, 2)}  ← not working for you` : ''}
+
+  <span style="color:var(--muted);">Denominator  (shares that move with price):</span>
+    Rebuyed / held shares              :  ${fmt(sumRebuyShares, 0)} sh
+  + Plain unsold shares                :  ${fmt(unsoldShares, 0)} sh
+  <span style="color:var(--border2)">  ───────────────────────────────────</span>
+  = Total price-sensitive shares       :  <span style="font-weight:600;">${fmt(pfCoeff, 0)} sh</span>
+
+  <span style="color:var(--accent);">Global BE = ${fmtDollar(constPart, 2)} ÷ ${fmt(pfCoeff, 0)} sh  =  <span style="font-weight:600;">${be}</span></span>
+  Verify: ${fmt(pfCoeff, 0)} sh × ${be}  =  ${isFinite(globalBE) ? fmtDollar(pfCoeff * globalBE, 2) : '—'}  (should equal Const part ✓)
+      `.trim();
+    }
+
+    // ── Scenario Save/Load ────────────────────────────────────────────────
+    function scenarioKey() {
+      let s = {};
+      try { s = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); } catch(e){}
+      return s;
+    }
+    function saveScenario() {
+      const name = scenarioNameEl.value.trim(); if(!name) return alert('Enter a scenario name.');
+      const obj = {
+        origShares: origSharesEl.value, origPrice: origPriceEl.value,
+        currentPrice: currentPriceEl.value, futurePrice: futurePriceEl.value,
+        ticker: $('ticker').value,
+        tranches: tranches.map((t,i)=>({
+          shares: (Number(t.sharesInput.value) > 0) ? t.sharesInput.value : '',
+          offset: t.sellOffsetInput.value,
+          drop:   t.dropInput.value,
+          sellDone: execState[i].sellDone,
+          buyDone:  execState[i].buyDone,
+          sellLocked: lockState[i].sellLocked,
+          sellLockedPrice: lockState[i].sellLockedPrice,
+          rebuyLocked: lockState[i].rebuyLocked,
+          rebuyLockedPrice: lockState[i].rebuyLockedPrice,
+        }))
+      };
+      const s = scenarioKey(); s[name]=obj;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+      refreshScenarioList(name);
+    }
+    function loadScenario() {
+      const name = scenarioSelectEl.value; if(!name) return;
+      const s = scenarioKey(); const obj = s[name]; if(!obj) return;
+      origSharesEl.value  = obj.origShares||''; origPriceEl.value=obj.origPrice||'';
+      currentPriceEl.value= obj.currentPrice||''; futurePriceEl.value=obj.futurePrice||'';
+      if(obj.ticker) $('ticker').value=obj.ticker;
+      (obj.tranches||[]).forEach((td,i)=>{
+        if(!tranches[i]) return;
+        tranches[i].sharesInput.value     = (td.shares && Number(td.shares) > 0) ? td.shares : '';
+        tranches[i].sellOffsetInput.value = td.offset||0;
+        tranches[i].dropInput.value       = td.drop||0;
+        execState[i].sellDone = td.sellDone !== false;
+        execState[i].buyDone  = td.buyDone  !== false;
+        lockState[i].sellLocked      = !!td.sellLocked;
+        lockState[i].sellLockedPrice = td.sellLockedPrice ?? null;
+        lockState[i].rebuyLocked     = !!td.rebuyLocked;
+        lockState[i].rebuyLockedPrice= td.rebuyLockedPrice ?? null;
+      });
+      scenarioNameEl.value = name;
+      resetSlider(); recalc();
+    }
+    function deleteScenario() {
+      const name = scenarioSelectEl.value; if(!name) return;
+      const s = scenarioKey(); delete s[name];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+      refreshScenarioList('');
+      recalc();
+    }
+    function refreshScenarioList(selectName) {
+      const s = scenarioKey();
+      scenarioSelectEl.innerHTML = '<option value="">(none)</option>';
+      Object.keys(s).forEach(k => {
+        const o=document.createElement('option'); o.value=k; o.textContent=k;
+        if(k===selectName) o.selected=true;
+        scenarioSelectEl.appendChild(o);
+      });
+    }
+
+    // ── CSV Export ────────────────────────────────────────────────────────
+    function exportCSV() {
+      const rows=[['T#','Shares Sold','Sell Offset%','Sell Price','Sale P/L','Drop%','Rebuy Price','Rebuy Shares','Future Value','Tranche P/L','SELL Exec','BUY Exec']];
+      tranches.forEach((t,i)=>{
+        const Ns=Number(t.sharesInput.value)||0; if(!Ns) return;
+        const es=execState[i];
+        rows.push([
+          `T${i+1}`,Ns,t.sellOffsetInput.value,
+          t.sellPriceSpan.value, t.lossSpan.textContent,
+          t.dropInput.value, t.rebuySpan.value,
+          t.rebuySharesSpan.textContent, t.futureSpan.textContent,
+          t.plSpan.textContent,
+          es.sellDone?'Done':'Missed', es.buyDone?'Done':'Missed'
+        ]);
+      });
+      const csv=rows.map(r=>r.join(',')).join('\n');
+      const a=document.createElement('a');
+      a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+      a.download=($('ticker').value||'stock')+'_breakeven.csv';
+      a.click();
+    }
+
+    // ── Price Fetch — investing.com BID scraper via corsproxy.io (on-demand only) ──
+    // No polling. Fires only when the user clicks ↻.
+
+    async function fetchPriceDirect() {
+      const rawTicker = $('ticker').value.trim().toUpperCase();
+      if (!rawTicker) return;
+
+      const dot = $('priceDot'), st = $('priceStatus');
+      dot.className  = 'status-dot loading';
+      st.textContent = 'Fetching…';
+
+      // Build investing.com ETF URL from ticker (lowercase slug)
+      const slug      = rawTicker.toLowerCase();
+      const target    = `https://www.investing.com/etfs/${slug}`;
+      const proxyUrl  = 'https://corsproxy.io/?url=' + encodeURIComponent(target);
+
+      try {
+        const res = await fetch(proxyUrl, { method: 'GET' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+
+        const htmlText = await res.text();
+        const parser   = new DOMParser();
+        const doc      = parser.parseFromString(htmlText, 'text/html');
+
+        let bidValue = null;
+
+        // Strategy 1: find a "Bid" label element, then look for a numeric sibling
+        const allEls = Array.from(doc.querySelectorAll('span, div, td, th'));
+        const bidLabel = allEls.find(el => {
+          const t = el.textContent.trim().toLowerCase();
+          return t === 'bid' || t.startsWith('bid ');
+        });
+
+        if (bidLabel) {
+          const container  = bidLabel.parentElement || doc;
+          const candidates = Array.from(container.querySelectorAll('span, div, td'));
+          const numericRx  = /^\s*\d+(\.\d+)?\s*$/;
+          for (const c of candidates) {
+            const txt = c.textContent.trim();
+            if (numericRx.test(txt) && c !== bidLabel) { bidValue = txt; break; }
+          }
+        }
+
+        // Strategy 2: regex scan near the word "bid" in raw HTML
+        if (!bidValue) {
+          const idx = htmlText.toLowerCase().indexOf('bid');
+          if (idx !== -1) {
+            const slice = htmlText.slice(idx, idx + 500);
+            const m = slice.match(/(\d{1,4}\.\d{2})/);
+            if (m) bidValue = m[1];
+          }
+        }
+
+        if (!bidValue) throw new Error('BID not found on page');
+
+        const price = Number(bidValue);
+        currentPriceEl.value = price.toFixed(2);
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        dot.className  = 'status-dot live';
+        st.textContent = `${rawTicker}  BID $${price.toFixed(2)} · ${now} · click ↻ to refresh`;
+        recalc();
+
+      } catch (e) {
+        dot.className  = 'status-dot error';
+        st.textContent = `Error: ${e.message}`;
+      }
+    }
+
+    // ── Event listeners ───────────────────────────────────────────────────
+    [origSharesEl, origPriceEl, currentPriceEl, futurePriceEl].forEach(el=>el.addEventListener('input', ()=>{resetSlider();recalc();}));
+    trancheBodyEl.addEventListener('input', recalc);
+
+    futurePriceSlider.addEventListener('input', ()=>{
+      const pct=Number(futurePriceSlider.value);
+      futurePriceSliderLabel.textContent=(pct>=0?'+':'')+pct+'%';
+      futurePriceEl.value=fmt(baseFuturePrice*(1+pct/100),2).replace(/,/g,'');
+      recalc();
+    });
+    futurePriceEl.addEventListener('change', resetSlider);
+
+    $('saveScenarioBtn').addEventListener('click', saveScenario);
+    $('loadScenarioBtn').addEventListener('click', loadScenario);
+    $('deleteScenarioBtn').addEventListener('click', deleteScenario);
+    $('exportBtn').addEventListener('click', exportCSV);
+    $('fetchNowBtn').addEventListener('click', fetchPriceDirect);
+
+    refreshScenarioList('');
+    recalc();
+  </script>
+</body>
+</html>

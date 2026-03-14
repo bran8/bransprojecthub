@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ascentdining.static2.website/ascent-dining.schema.json",
+  "title": "10-Night Dining Planner",
+  "type": "object",
+  "required": ["currentNight", "nights", "exclCustom", "clsCustom"],
+  "additionalProperties": false,
+  "properties": {
+    "currentNight": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "1-based index of the current night in the 10-night trip.",
+      "default": 1
+    },
+    "nights": {
+      "type": "array",
+      "description": "Exactly 10 nights of dining options and selections.",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["tags", "sigCustom"],
+        "additionalProperties": false,
+        "properties": {
+          "dining": {
+            "description": "Featured dining room (e.g., Normandie, Tuscan, Cosmopolitan, Cyprus) or any other venue name like 'Sushi on 5' or 'Oceanview Cafe'. May be null if not set.",
+            "type": ["string", "null"]
+          },
+          "tags": {
+            "type": "object",
+            "description": "Map of 'menuType + delimiter + itemName' to a menu item selection object. Delimiter can be '||' or double line break '\\n\\n'.",
+            "patternProperties": {
+              "^.+?(\\|\\||\\n\\n).+$": {
+                "$ref": "#/$defs/menuItem"
+              }
+            },
+            "additionalProperties": false
+          },
+          "sigCustom": {
+            "$ref": "#/$defs/customBuckets",
+            "description": "Per-night custom items for Signature (SIG) when menus vary nightly."
+          }
+        }
+      }
+    },
+    "exclCustom": {
+      "$ref": "#/$defs/customBuckets",
+      "description": "Global custom items (exclusive/miscellaneous) that users add if menus change."
+    },
+    "clsCustom": {
+      "$ref": "#/$defs/customBuckets",
+      "description": "Global custom items for the Classic (CLS) menu."
+    },
+    "sigCustom": {
+      "$ref": "#/$defs/customBuckets",
+      "description": "Optional global custom items for the Signature (SIG) menu (present in some datasets)."
+    }
+  },
+
+  "$defs": {
+    "menuItem": {
+      "type": "object",
+      "description": "User selection metadata for a specific menu item.",
+      "required": ["diners", "feat", "cat"],
+      "additionalProperties": false,
+      "properties": {
+        "diners": {
+          "type": "array",
+          "description": "Names of diners who desire this item.",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "default": []
+        },
+        "feat": {
+          "type": "boolean",
+          "description": "If true, diner wants to feature/eat this item at some point during the trip.",
+          "default": false
+        },
+        "cat": {
+          "type": "string",
+          "description": "Course category: s=Starter, e=Entree, d=Dessert.",
+          "enum": ["s", "e", "d"]
+        }
+      }
+    },
+
+
+ "customBuckets": {
+    "type": "object",
+    "description": "Buckets for user-added menu items by course. Each entry can be a plain string (item name) or an object with name and variant.",
+    "required": ["s", "e", "d"],
+    "additionalProperties": false,
+    "properties": {
+      "s": {
+        "type": "array",
+        "description": "Custom Starters.",
+        "items": { "$ref": "#/$defs/customItem" },
+        "default": []
+      },
+      "e": {
+        "type": "array",
+        "description": "Custom Entrees.",
+        "items": { "$ref": "#/$defs/customItem" },
+        "default": []
+      },
+      "d": {
+        "type": "array",
+        "description": "Custom Desserts.",
+        "items": { "$ref": "#/$defs/customItem" },
+        "default": []
+      }
+    }
+  },
+
+  "customItem": {
+    "description": "A custom menu item, either a simple name (string) or an object with name and variant code.",
+    "oneOf": [
+      {
+        "type": "string",
+        "minLength": 1,
+        "description": "Simple item name (backward compatible)."
+      },
+      {
+        "type": "object",
+        "required": ["n"],
+        "additionalProperties": false,
+        "properties": {
+          "n": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Item name (e.g., 'Vegan Special Meal')."
+          },
+          "v": {
+            "type": "integer",
+            "description": "Optional variant/version indicator (e.g., 1).",
+            "minimum": 0
+          }
+        }
+      }
+    ]
+  }
+
+
+  },
+
+  "description": "Schema for a 10-night dining planner that mixes nightly-changing Signature (SIG) items and five static nightly menus (CLS, Normandie, Tuscan, Cosmopolitan, Cyprus), with user tagging/feature flags and custom additions."
+}
+
