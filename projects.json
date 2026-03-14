@@ -1,0 +1,90 @@
+{
+  "site": {
+    "title": "Bran's Project Hub",
+    "subtitle": "Tools for me, and you!",
+    "theme": "dark"
+  },
+  "projects": [
+    {
+      "id": "ascent-dining",
+      "title": "Celebrity Ascent Dining Planner",
+      "description": "Plan your cruise dinner ahead of time for a family up to 4.",
+      "url": "./projects/ascent-dining",
+      "image": "./projects/ascent-dining/thumbnail.jpg",
+      "tags": ["food", "cruise","planning","dining"],
+      "status": "live",
+      "featured": true,
+      "enabled": true,
+      "openInNewTab": true,
+      "updatedAt": "2026-03-13",
+      "note": "Desktop optimised",
+      "readMore": "Loaded with dinner meals from the Panama Canal & Southern Caribbean · 11 Nights · March 16, 2026 sailing.  Click through each night and tag your selections for yourself, spouse and kids.  Click the Overview to see the plan! "
+    },
+
+    {
+      "id": "price-link",
+      "title": "ETF to Commodity Price Link",
+      "description": "Calculate TSX ETF prices linked to their commodity pair such as gold.",
+      "url": "./projects/price-link",
+      "image": "./projects/price-link/thumbnail.jpg",
+      "tags": ["finance", "calculator","dynamic","live data"],
+      "status": "live",
+      "featured": false,
+      "enabled": true,
+      "openInNewTab": true,
+      "updatedAt": "2026-03-13",
+      "note": "Mobile friendly",
+      "readMore": "Fetches live price, lets you understand relative prices when markets are closed"
+    },
+
+    {
+      "id": "breakeven-tranche",
+      "title": "Breakeven Tranche Calculator",
+      "description": "Calculate breakeven point for Sell and Rebuy tranche scenarios.",
+      "url": "./projects/breakeven-tranche",
+      "image": "./projects/breakeven-tranche/thumbnail.jpg",
+      "tags": ["finance", "P&L","dynamic","advanced"],
+      "status": "live",
+      "featured": false,
+      "enabled": true,
+      "openInNewTab": true,
+      "updatedAt": "2026-03-13",
+      "note": "Desktop required",
+      "readMore": "Test out scenarios for your ETF breakeven price, and how much the price needs to move to hit your target profit or loss."
+    },
+
+    {
+      "id": "meal-plan",
+      "title": "Ascent Meal Plan Analysis",
+      "description": "Advanced Meal Plan analysis.",
+      "url": "./projects/meal-plan",
+      "image": "./projects/meal-plan/thumbnail.jpg",
+      "tags": ["cruise", "dining","optmise"],
+      "status": "wip",
+      "featured": false,
+      "enabled": true,
+      "openInNewTab": true,
+      "updatedAt": "2026-03-13",
+      "note": "Mobile friendly",
+      "readMore": "Standalone advanced meal planner, import the JSON file from the Ascent Dining Planner."
+    },
+
+    {
+      "id": "deadlock-soundboard",
+      "title": "Deadlock Soundboard (Paige)",
+      "description": "A collection of voice lines for Valve's Deadlock game.",
+      "url": "./projects/deadlock-soundboard",
+      "image": "./projects/deadlock-soundboard/thumbnail.jpg",
+      "tags": ["gaming", "deadlock","paige"],
+      "status": "live",
+      "featured": false,
+      "enabled": true,
+      "openInNewTab": true,
+      "updatedAt": "2026-03-13",
+      "note": "Sound files not included, they must be added from your local game files",
+      "readMore": "A soundboard for the voice lines of the character Paige in Valve's Deadlock game.  It also includes an event announcement feature."
+    }
+
+  ]
+}
+
