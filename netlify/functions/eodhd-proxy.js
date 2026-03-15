@@ -34,4 +34,7 @@
       return { statusCode: 500, body: `Fetch error: ${err.message}` };
     }
   };
-  
+
+export const config = {
+    path: "/api/eodhd-proxy",
+};
