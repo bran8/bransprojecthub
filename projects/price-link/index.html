@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linked Price Calculator v21</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+  <button class="dark-toggle" onclick="toggleDarkMode()" id="darkToggleBtn" title="Toggle dark mode">
+    <span class="toggle-icon">☀️</span>
+    <span id="darkToggleLabel">Light</span>
+  </button>
+  <h1>Linked Price Calculator</h1>
+  <p>Proportional explorer · Ratio drift tracker · KDE-powered estimator</p>
+  <div class="auto-refresh-bar">
+    <div class="rdot" id="timerDot"></div>
+    <span id="timerLabel">Auto-refresh Asset A (CMC) every 2 min</span>
+  </div>
+</div>
+
+<!-- ── Profile Bar ── -->
+<div class="profile-bar">
+  <span class="profile-bar-label">Pair Profile</span>
+  <select class="profile-select" id="profileSelect" onchange="onProfileChange()"></select>
+  <button class="profile-btn" onclick="saveCurrentAsProfile()" title="Save current tickers as a new profile">＋ Save as…</button>
+  <button class="profile-btn danger" id="deleteProfileBtn" onclick="deleteActiveProfile()" title="Delete this profile">✕ Delete</button>
+  <span class="profile-badge builtin" id="profileBadge">built-in</span>
+</div>
+
+<!-- ── Row 1: Two columns ── -->
+<div class="two-col">
+
+  <!-- Asset A -->
+  <div class="card">
+    <div class="card-title">Asset A — Anchor</div>
+    <div class="row">
+      <label>Ticker</label>
+      <input type="text" id="tickerA" value="ETH-USD" readonly style="opacity:0.6;cursor:default;">
+    </div>
+    <div class="row">
+      <label>Base $</label>
+      <input type="number" id="manualA" placeholder="Override" step="1" onchange="onManualA()">
+    </div>
+    <div class="price-big" id="priceA">—</div>
+    <div class="status-row">
+      <div class="dot" id="dotA"></div>
+      <span class="status-text" id="statusA">Not fetched</span>
+    </div>
+    <button class="btn primary" onclick="fetchAssetA()">⟳ Fetch Live Price</button>
+  </div>
+
+  <!-- Asset B -->
+  <div class="card">
+    <div class="card-title">Asset B — Linked</div>
+    <div class="row">
+      <label>Ticker</label>
+      <input type="text" id="tickerB" value="ETHQ.TO">
+    </div>
+    <div class="stepper-row">
+      <label>Base $</label>
+      <button class="sbtn" onmousedown="startStep(-1)" onmouseup="stopStep()" onmouseleave="stopStep()" ontouchstart="startStep(-1)" ontouchend="stopStep()">−</button>
+      <input type="number" id="manualB" class="stepper-input" placeholder="Price" step="0.01" onchange="onManualB()">
+      <button class="sbtn" onmousedown="startStep(1)" onmouseup="stopStep()" onmouseleave="stopStep()" ontouchstart="startStep(1)" ontouchend="stopStep()">+</button>
+    </div>
+    <div class="price-big" id="priceB">—</div>
+    <div class="status-row">
+      <div class="dot" id="dotB"></div>
+      <span class="status-text" id="statusB">Not fetched</span>
+    </div>
+    <button class="btn" onclick="fetchAsset('B')" title="Fetched price is NOT saved as a ratio datapoint">
+      ⟳ Fetch Price <span style="color:var(--muted);font-size:.75rem;font-weight:400"></span>
+    </button>
+  </div>
+</div>
+
+<!-- ── FX Intelligence Panel ── -->
+<div class="card" id="fxPanel" style="display:none; margin-bottom:16px;">
+  <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <span>&#9889; FX Intelligence &mdash; USD&thinsp;/&thinsp;CAD</span>
+    <span id="fxRateDisplay" style="font-family:monospace;font-size:0.82rem;font-weight:600;color:var(--muted);">Fetching rate&hellip;</span>
+  </div>
+  <div id="fxBanner" style="display:none;border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:14px;font-size:0.85rem;font-weight:700;line-height:1.5;"></div>
+  <div class="stats-grid">
+    <div class="stat-row"><span>USD / CAD Rate</span><span class="stat-val" id="fxRateStat">&#8212;</span></div>
+    <div class="stat-row"><span>FX-Implied Fair Price (Asset B)</span><span class="stat-val" id="fxFairB">&#8212;</span></div>
+    <div class="stat-row"><span>ETF Premium / Discount vs Fair</span><span class="stat-val" id="fxPremDisc">&#8212;</span></div>
+    <div class="stat-row"><span>FX-Normalised Ratio <small style="opacity:.65;">(ideal &#8776; 1.00000)</small></span><span class="stat-val" id="fxNormRatio">&#8212;</span></div>
+    <div class="stat-row"><span>Pure Tracking Error</span><span class="stat-val" id="fxTrackErr">&#8212;</span></div>
+  </div>
+  <div id="fxAttrib" style="display:none;margin-top:12px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--teal-pale);border:1.5px solid var(--border);font-size:0.82rem;line-height:1.6;"></div>
+</div>
+
+<!-- ── Row 2: Slider ── -->
+<div class="card">
+  <div class="card-title">Price Scenario Slider</div>
+        <div class="divider">· · · ✿ · · · </div>
+
+  <div class="slider-labels">
+    <span>−50%</span><span>−25%</span><span>0%</span><span>+50%</span><span>+100%</span>
+  </div>
+  <input type="range" id="slider" min="-50" max="100" step="0.1" value="0" oninput="onSliderDrag()">
+  <div class="pct-big" id="pctDisplay">0.00%</div>
+
+  <div class="target-row">
+    <div class="target-box">
+      <label>Asset A — Target $</label>
+      <input type="number" id="targetA" placeholder="2500" step="1" oninput="onTargetDollar('A')">
+    </div>
+    <div class="target-box">
+      <label>Asset B — Target $</label>
+      <input type="number" id="targetB" placeholder="34.50" step="0.01" oninput="onTargetDollar('B')">
+    </div>
+  </div>
+
+  <div class="proj-row">
+    <div class="proj-box">
+      <div class="proj-lbl" id="lblPA">Asset A</div>
+      <div class="proj-price" id="projA">—</div>
+      <div class="proj-delta" id="deltaA">—</div>
+    </div>
+    <div class="proj-box">
+      <div class="proj-lbl" id="lblPB">Asset B</div>
+      <div class="proj-price" id="projB">—</div>
+      <div class="proj-delta" id="deltaB">—</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:16px">
+    <button class="btn primary" onclick="resetSlider()">↺ Reset to 0%</button>
+  </div>
+</div>
+
+<!-- ── Ratio Debug (bottom, toggled) ── -->
+<div class="debug-toggle-bar">
+  <hr>
+  <button class="debug-toggle-btn" id="debugToggleBtn" onclick="toggleDebug()">▼ Show Ratio Debug</button>
+  <hr>
+</div>
+
+<div class="debug-panel" id="debugPanel">
+  <div class="ratio-stats">
+    <div class="stats-title">
+      <span>✦ Ratio History - Under the hood</span>
+      <span class="stat-val" id="ratioCountSub">0 / 1000</span>
+    </div>
+    <div class="ratio-badge" id="ratioBadge" style="margin-bottom:14px;font-size:0.85rem;">Ratio A÷B: —</div>
+
+    <div class="stats-grid">
+      <div class="stat-row"><span>Simple average</span><span class="stat-val" id="ratioAvg">—</span></div>
+      <div class="stat-row"><span>Median</span><span class="stat-val" id="ratioMedian">—</span></div>
+      <div class="stat-row"><span>Mode (4dp bins)</span><span class="stat-val" id="ratioMode">—</span></div>
+      <div class="stat-row"><span>KDE Peak ✦</span><span class="stat-val gold" id="ratioKDE">—</span></div>
+      <div class="stat-row"><span>Trimmed mean (10%)</span><span class="stat-val" id="ratioTrimmed">—</span></div>
+      <div class="stat-row"><span>Drift (max − min)</span><span class="stat-val" id="ratioDrift">—</span></div>
+      <div class="stat-row"><span>Last saved</span><span class="stat-val" id="ratioLast">—</span></div>
+      <div class="stat-row" style="border-top:1px solid var(--border);margin-top:6px;padding-top:8px;">
+        <span style="font-size:0.75rem;color:var(--muted);font-style:italic;" id="hlDisplayLabel">Recency-weighted</span>
+      </div>
+      <div class="stat-row highlight-w"><span>W-KDE Peak ✦</span><span class="stat-val gold" id="ratioWKDE">—</span></div>
+      <div class="stat-row highlight-w"><span>W-Mean</span><span class="stat-val" id="ratioWMean">—</span></div>
+    </div>
+
+    <div class="estimator-row">
+      <label>Recency ½-life:</label>
+      <select id="halfLifeSelect" onchange="saveHalfLifePref(); refreshStats();">
+        <option value="5">5 pts — aggressive</option>
+        <option value="10">10 pts</option>
+        <option value="25" selected>25 pts — default</option>
+        <option value="50">50 pts</option>
+        <option value="100">100 pts</option>
+        <option value="none">∞ — no decay</option>
+      </select>
+    </div>
+    <div class="estimator-row">
+      <label>Startup / Apply:</label>
+      <select id="estimatorSelect" onchange="saveEstimatorPref()">
+        <option value="kde">KDE Peak (recommended)</option>
+        <option value="wkde">W-KDE Peak ✦ (recency)</option>
+        <option value="wmean">W-Mean (recency)</option>
+        <option value="mode">Binned Mode</option>
+        <option value="median">Median</option>
+        <option value="trimmed">Trimmed Mean 10%</option>
+        <option value="avg">Simple Average</option>
+      </select>
+    </div>
+
+    <div class="stat-actions">
+      <button class="btn primary" onclick="applyEstimatorToB()">✦ Apply Estimator → B</button>
+      <button class="btn ghost" onclick="clearHistory()">🗑 Clear History</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 
+   CONFIG
+ */
+const TOKEN         = '69a8eecc00a6a4.04467805';
+
+/* ── Storage keys ── */
+const PREF_KEY      = 'ab_estimator_pref';
+const DEBUG_KEY     = 'ab_debug_open';
+const HALFLIFE_KEY  = 'ab_halflife_pref';
+const PROFILES_KEY  = 'lpc_profiles_v1';
+const ACTIVE_KEY    = 'lpc_active_profile';
+const DARK_KEY      = 'lpc_dark_mode';
+const SLIDER_KEY_PREFIX  = 'lpc_slider_pct_';
+const TARGET_A_KEY_PREFIX = 'lpc_target_a_';
+const TARGET_B_KEY_PREFIX = 'lpc_target_b_';
+const AUTO_MS       = 60000*6;
+
+/* ── Default (built-in) profiles ── */
+const BUILTIN_PROFILES = [
+  { name: 'ETH / ETHQ',  cmcSymbol: 'ETH', tickerA: 'ETH-USD',  tickerB: 'ETHQ.TO',  storageKey: 'ratio_ETH_ETHQ',  builtin: true },
+  { name: 'XRP / XRPQ',  cmcSymbol: 'XRP', tickerA: 'XRP-USD',  tickerB: 'XRPQ.TO',  storageKey: 'ratio_XRP_XRPQ',  builtin: true },
+  { name: 'SOL / SOLQ',  cmcSymbol: 'SOL', tickerA: 'SOL-USD',  tickerB: 'SOLQ.TO',  storageKey: 'ratio_SOL_SOLQ',  builtin: true },
+  { name: 'BTC / FBTC',  cmcSymbol: 'BTC', tickerA: 'BTC-USD',  tickerB: 'FBTC.TO',  storageKey: 'ab_ratio_history_v1', builtin: true },
+  { name: 'GOLD / ZGLD',  cmcSymbol: 'XAUt', tickerA: 'GOLD-USD',  tickerB: 'ZGLD.TO',  storageKey: 'ratio_GOLD_ZGLD', builtin: true },
+];
+
+let baseA = null, baseB = null;
+let currentPct = 0;
+let stepTimer = null, stepDebounce = null;
+let autoTimer = null, autoCountdown = null, autoSecsLeft = AUTO_MS / 1000;
+let userSetB = false;
+let liveRatio = null;
+let fxRate             = null;   // live USD/CAD (5 dp)
+let fxRateSessionStart = null;   // locked on first fetch
+let fxSessionFetched   = false;  // one-per-session guard
+let activeProfile = BUILTIN_PROFILES[0];
+
+const $ = id => document.getElementById(id);
+
+/* 
+   DARK MODE
+ */
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem(DARK_KEY, isDark ? '1' : '0');
+  updateDarkToggleLabel(isDark);
+}
+function updateDarkToggleLabel(isDark) {
+  $('darkToggleLabel').textContent = isDark ? 'Dark' : 'Light';
+  $('darkToggleBtn').querySelector('.toggle-icon').textContent = isDark ? '🌙' : '☀️';
+}
+function initDarkMode() {
+  const pref = localStorage.getItem(DARK_KEY);
+  const isDark = pref === '1';
+  if (isDark) document.body.classList.add('dark');
+  updateDarkToggleLabel(isDark);
+}
+
+/* 
+   PROFILE MANAGEMENT
+ */
+function loadAllProfiles() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PROFILES_KEY) || '[]');
+    return [...BUILTIN_PROFILES, ...saved.filter(p => !p.builtin)];
+  } catch { return [...BUILTIN_PROFILES]; }
+}
+function getUserProfiles() {
+  try { return JSON.parse(localStorage.getItem(PROFILES_KEY) || '[]'); } catch { return []; }
+}
+function saveUserProfiles(profiles) {
+  localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles.filter(p => !p.builtin)));
+}
+
+function renderProfileDropdown() {
+  const sel = $('profileSelect');
+  const all = loadAllProfiles();
+  const activeName = localStorage.getItem(ACTIVE_KEY) || all[0].name;
+  sel.innerHTML = '';
+  all.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.name;
+    opt.textContent = p.name + (p.builtin ? '' : ' ★');
+    if (p.name === activeName) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  // Update badge
+  const current = all.find(p => p.name === activeName) || all[0];
+  updateProfileBadge(current);
+  return current;
+}
+
+function updateProfileBadge(profile) {
+  const badge = $('profileBadge');
+  const delBtn = $('deleteProfileBtn');
+  if (profile.builtin) {
+    badge.textContent = 'built-in';
+    badge.className = 'profile-badge builtin';
+    delBtn.style.display = 'none';
+  } else {
+    badge.textContent = 'custom';
+    badge.className = 'profile-badge';
+    delBtn.style.display = '';
+  }
+}
+
+function applyProfile(profile) {
+  activeProfile = profile;
+  localStorage.setItem(ACTIVE_KEY, profile.name);
+
+  // Reset runtime state
+  baseA = null; baseB = null; liveRatio = null; userSetB = false; currentPct = 0;
+
+  // Update UI
+  $('tickerA').value = profile.tickerA;
+  $('tickerB').value = profile.tickerB;
+  $('manualA').value = '';
+  $('manualB').value = '';
+  $('priceA').textContent = '—';
+  $('priceB').textContent = '—';
+  $('dotA').className = 'dot';
+  $('dotB').className = 'dot';
+  $('statusA').textContent = 'Not fetched';
+  $('statusB').textContent = 'Not fetched';
+  $('lblPA').textContent = profile.tickerA;
+  $('lblPB').textContent = profile.tickerB;
+  $('slider').value = 0;
+  restoreSliderPct();
+  $('pctDisplay').textContent = '0.00%';
+  $('pctDisplay').className = 'pct-big';
+  $('projA').textContent = '—'; $('deltaA').textContent = '—';
+  $('projB').textContent = '—'; $('deltaB').textContent = '—';
+  $('targetA').value = ''; $('targetB').value = '';
+  restoreTargetValues(); // reload user's saved targets for this profile
+
+  updateProfileBadge(profile);
+  refreshStats();
+
+  const h = getHistory();
+  if (h.length > 0) {
+    $('dotB').className = 'dot loading';
+    $('statusB').textContent = 'Waiting for Asset A to compute ratio…';
+    fetchAssetA();
+  } else {
+    fetchAssetA();
+    fetchAsset('B');
+  }
+  resetAutoCountdown();
+}
+
+function onProfileChange() {
+  const sel = $('profileSelect');
+  const all = loadAllProfiles();
+  const profile = all.find(p => p.name === sel.value) || all[0];
+  applyProfile(profile);
+}
+
+function saveCurrentAsProfile() {
+  const tickerA = $('tickerA').value.trim().toUpperCase();
+  const tickerB = $('tickerB').value.trim().toUpperCase();
+  if (!tickerA || !tickerB) { alert('Set tickers for both assets first.'); return; }
+  const defaultName = tickerA.replace('-USD','') + ' / ' + tickerB.replace('.TO','');
+  const name = prompt('Name this profile:', defaultName);
+  if (!name || !name.trim()) return;
+  const trimmed = name.trim();
+  const all = loadAllProfiles();
+  if (all.some(p => p.name === trimmed)) { alert(`A profile named "${trimmed}" already exists.`); return; }
+  const cmcSymbol = tickerA.replace('-USD','').replace('-','');
+  const storageKey = 'ratio_' + cmcSymbol + '_' + tickerB.replace(/[^A-Z0-9]/g,'');
+  const newProfile = { name: trimmed, cmcSymbol, tickerA, tickerB, storageKey, builtin: false };
+  const userProfiles = getUserProfiles();
+  userProfiles.push(newProfile);
+  saveUserProfiles(userProfiles);
+  renderProfileDropdown();
+  $('profileSelect').value = trimmed;
+  applyProfile(newProfile);
+}
+
+function deleteActiveProfile() {
+  if (activeProfile.builtin) return;
+  if (!confirm(`Delete profile "${activeProfile.name}"?\nIts ratio history will be preserved in localStorage.`)) return;
+  const userProfiles = getUserProfiles().filter(p => p.name !== activeProfile.name);
+  saveUserProfiles(userProfiles);
+  const all = loadAllProfiles();  // rebuilt without deleted profile
+  // all is now rebuilt but we need to reload
+  const fresh = [...BUILTIN_PROFILES, ...userProfiles];
+  const fallback = fresh[0];
+  renderProfileDropdown();
+  applyProfile(fallback);
+  $('profileSelect').value = fallback.name;
+}
+
+/* 
+   DEBUG PANEL TOGGLE
+ */
+function toggleDebug() {
+  const panel = $('debugPanel'), btn = $('debugToggleBtn');
+  const isOpen = panel.classList.toggle('open');
+  btn.textContent = isOpen ? '▲ Hide Ratio Debug' : '▼ Show Ratio Debug';
+  localStorage.setItem(DEBUG_KEY, isOpen ? '1' : '0');
+}
+
+/* 
+   FORMAT HELPERS
+ */
+function fmtA(n) {
+  if (n == null) return '—';
+  if (n >= 100)  return '$' + Math.round(n).toLocaleString('en-US');
+  if (n >= 1)    return '$' + n.toFixed(2);
+  return '$' + n.toFixed(4);
+}
+function fmtB(n) {
+  if (n == null) return '—';
+  return n >= 10 ? '$' + n.toFixed(2) : '$' + n.toFixed(4);
+}
+function fmtAny(n) {
+  if (n == null) return '—';
+  if (n >= 1000) return '$' + Math.round(n).toLocaleString('en-US');
+  if (n >= 1)    return '$' + n.toFixed(2);
+  return '$' + n.toFixed(4);
+}
+function fmtDelta(n, pct) {
+  if (n == null) return '—';
+  const s = n >= 0 ? '+' : '−';
+  const ps = pct >= 0 ? '+' : '';
+  return `${s}${fmtAny(Math.abs(n)).replace('$', '')}  (${ps}${pct.toFixed(2)}%)`;
+}
+
+/* 
+   STATISTICS
+ */
+function mean(arr)   { return arr.reduce((a,b)=>a+b,0)/arr.length; }
+function stdDev(arr) {
+  const m = mean(arr);
+  return Math.sqrt(arr.reduce((s,x) => s+(x-m)**2, 0) / arr.length);
+}
+function getMedian(arr) {
+  const s = [...arr].sort((a,b)=>a-b), m = Math.floor(s.length/2);
+  return s.length%2 ? s[m] : (s[m-1]+s[m])/2;
+}
+function getBinnedMode(arr, dp=4) {
+  const freq = {}, mult = Math.pow(10,dp);
+  let maxF = 0, mode = arr[0];
+  for (const x of arr) { const k=Math.round(x*mult); freq[k]=(freq[k]||0)+1; if(freq[k]>maxF){maxF=freq[k];mode=k/mult;} }
+  return mode;
+}
+function getTrimmedMean(arr, trim=0.10) {
+  const s = [...arr].sort((a,b)=>a-b);
+  const cut = Math.max(1, Math.floor(s.length*trim));
+  const t = s.slice(cut, s.length-cut);
+  return mean(t.length ? t : arr);
+}
+function getKDEPeak(arr) {
+  if (arr.length < 2) return arr[0];
+  const sd = stdDev(arr) || 1e-9;
+  const h  = 1.06 * sd * Math.pow(arr.length, -0.2);
+  const mn = Math.min(...arr), mx = Math.max(...arr);
+  const range = mx - mn; if (range < 1e-12) return mn;
+  const STEPS = 900; let maxD = -1, peak = mn;
+  for (let i=0; i<=STEPS; i++) {
+    const x = mn + i*range/STEPS;
+    let d = 0; for (const xi of arr) { const u=(x-xi)/h; d+=Math.exp(-0.5*u*u); }
+    if (d > maxD) { maxD=d; peak=x; }
+  }
+  return peak;
+}
+function getEstimate(arr) {
+  const m = $('estimatorSelect').value;
+  if (m === 'wkde' || m === 'wmean') {
+    const w = getDecayWeights(arr.length, getHalfLife());
+    return m === 'wkde' ? getWeightedKDEPeak(arr, w) : getWeightedMeanW(arr, w);
+  }
+  if (m==='kde')     return getKDEPeak(arr);
+  if (m==='mode')    return getBinnedMode(arr);
+  if (m==='median')  return getMedian(arr);
+  if (m==='trimmed') return getTrimmedMean(arr);
+  return mean(arr);
+}
+
+/* 
+   LOCALSTORAGE  (profile-aware)
+ */
+function getStorageKey() { return activeProfile ? activeProfile.storageKey : 'ab_ratio_history_v1'; }
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(getStorageKey())||'[]'); } catch { return []; }
+}
+function saveHistory(h) { localStorage.setItem(getStorageKey(), JSON.stringify(h)); }
+
+/* Returns the estimated anchor for the FX-normalised ratio:
+   fxNormRatio = (A_USD × FX) / B_CAD  — same-currency ratio, should be
+   stable when B is a perfectly-pegged ETF tracking A.
+   Falls back to live computation if no history has the field yet. */
+function getAnchorNormRatio() {
+  const h = getHistory();
+  const normVals = h.map(x => x.fxNormRatio).filter(v => v != null && isFinite(v));
+  if (normVals.length >= 2) return getEstimate(normVals);
+  if (normVals.length === 1) return normVals[0];
+  // No history with FX data yet — use live values as a bootstrap anchor
+  if (baseA && baseB && fxRate) return (baseA * fxRate) / baseB;
+  return null;
+}
+
+function addRatioPoint() {
+  if (!baseA || !baseB) return;
+  const ratio = baseA / baseB;
+  const fxNormRatio = fxRate ? (baseA * fxRate) / baseB : null;
+  const h = getHistory();
+  const pt = { ts: Date.now(), ratio };
+  if (fxNormRatio !== null) pt.fxNormRatio = fxNormRatio;
+  h.push(pt);
+  if (h.length > 1000) h.splice(0, h.length-1000);
+  saveHistory(h);
+  refreshStats();
+}
+
+function saveEstimatorPref() { localStorage.setItem(PREF_KEY, $('estimatorSelect').value); }
+function saveHalfLifePref()   { localStorage.setItem(HALFLIFE_KEY, $('halfLifeSelect').value); }
+
+function refreshStats() {
+  const h = getHistory(), n = h.length;
+  $('ratioCountSub').textContent = `${n} / 1000`;
+  if (!n) {
+    ['ratioAvg','ratioMedian','ratioMode','ratioKDE','ratioTrimmed','ratioDrift','ratioLast','ratioWKDE','ratioWMean'].forEach(id=>$(id).textContent='—');
+    return;
+  }
+  const vals = h.map(x => x.ratio);
+  const mn = Math.min(...vals), mx = Math.max(...vals);
+  const hl = getHalfLife();
+  const w  = getDecayWeights(vals.length, hl);
+  const hlLabel = hl ? `hl:${hl}` : 'uniform';
+  $('ratioAvg').textContent     = mean(vals).toFixed(6);
+  $('ratioMedian').textContent  = getMedian(vals).toFixed(6);
+  $('ratioMode').textContent    = getBinnedMode(vals).toFixed(6);
+  $('ratioKDE').textContent     = getKDEPeak(vals).toFixed(6);
+  $('ratioTrimmed').textContent = getTrimmedMean(vals).toFixed(6);
+  $('ratioDrift').textContent   = (mx-mn).toFixed(6);
+  $('ratioWKDE').textContent    = (vals.length >= 2 ? getWeightedKDEPeak(vals, w) : vals[0]).toFixed(6);
+  $('ratioWMean').textContent   = getWeightedMeanW(vals, w).toFixed(6);
+  const hlEl = $('hlDisplayLabel'); if (hlEl) hlEl.textContent = hlLabel;
+  const last = new Date(h[h.length-1].ts);
+  $('ratioLast').textContent = last.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  updateRatioBadge();
+}
+
+function clearHistory() {
+  if (!confirm('Clear ratio history for this profile?\nThis cannot be undone.')) return;
+  localStorage.removeItem(getStorageKey());
+  refreshStats();
+}
+
+function applyEstimatorToB() {
+  const h = getHistory();
+  if (!h.length) { alert('No ratio history yet.'); return; }
+  if (!baseA)    { alert('Fetch Asset A price first.'); return; }
+  const est = getEstimate(h.map(x=>x.ratio));
+  const label = $('estimatorSelect').options[$('estimatorSelect').selectedIndex].text;
+  userSetB = false;
+  setBase('B', baseA/est, $('tickerB').value.trim().toUpperCase(), false);
+  $('dotB').className = 'dot live';
+  $('statusB').textContent = `${label}: ${est.toFixed(6)} · ${h.length} pts`;
+}
+
+function getHalfLife() {
+  const sel = $('halfLifeSelect');
+  if (!sel) return null;
+  const v = sel.value;
+  return v === 'none' ? null : parseInt(v);
+}
+function getDecayWeights(n, halfLife) {
+  if (!halfLife || halfLife <= 0 || n === 0) return new Array(n).fill(1);
+  const alpha = Math.pow(0.5, 1 / halfLife);
+  return Array.from({length: n}, (_, i) => Math.pow(alpha, n - 1 - i));
+}
+function getWeightedMeanW(arr, weights) {
+  const sumW = weights.reduce((a, b) => a + b, 0);
+  return arr.reduce((acc, v, i) => acc + v * weights[i], 0) / sumW;
+}
+function getWeightedKDEPeak(arr, weights) {
+  if (arr.length < 2) return arr[0];
+  const sumW  = weights.reduce((a, b) => a + b, 0);
+  const wMean = getWeightedMeanW(arr, weights);
+  const wVar  = arr.reduce((acc, v, i) => acc + weights[i] * (v - wMean) ** 2, 0) / sumW;
+  const sd    = Math.sqrt(wVar) || 1e-9;
+  const sumW2 = weights.reduce((a, b) => a + b * b, 0);
+  const n_eff = (sumW * sumW) / sumW2;
+  const h     = 1.06 * sd * Math.pow(n_eff, -0.2);
+  const mn = Math.min(...arr), mx = Math.max(...arr);
+  const range = mx - mn; if (range < 1e-12) return mn;
+  const STEPS = 900; let maxD = -1, peak = mn;
+  for (let i = 0; i <= STEPS; i++) {
+    const x = mn + i * range / STEPS;
+    let d = 0;
+    for (let j = 0; j < arr.length; j++) { const u=(x-arr[j])/h; d+=weights[j]*Math.exp(-0.5*u*u); }
+    if (d > maxD) { maxD = d; peak = x; }
+  }
+  return peak;
+}
+
+/* ── Live ratio propagation ── */
+function propagateBLive() {
+  if (!liveRatio || !baseA) return;
+  baseB = baseA / liveRatio;
+  $('priceB').textContent = fmtB(baseB);
+  $('manualB').value = baseB >= 10 ? baseB.toFixed(2) : baseB.toFixed(4);
+  $('dotB').className = 'dot live';
+  const t = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  $('statusB').textContent = `Tracked · ratio ${liveRatio.toFixed(6)} · ${t}`;
+}
+
+/* 
+   SET BASE PRICE
+ */
+function setBase(which, price, label, saveRatio) {
+  price = Number(price);
+  if (!isFinite(price) || price <= 0) return;
+  if (which === 'A') {
+    baseA = price;  // keep full precision (don't round — supports XRP, SOL etc.)
+    $('priceA').textContent = fmtA(baseA);
+    $('manualA').value = baseA >= 100 ? Math.round(baseA) : baseA.toFixed(4);
+    $('lblPA').textContent = label || 'Asset A';
+    if (liveRatio) propagateBLive();
+  } else {
+    baseB = price;
+    $('priceB').textContent = fmtB(price);
+    $('manualB').value = price >= 10 ? price.toFixed(2) : price.toFixed(4);
+    $('lblPB').textContent = label || 'Asset B';
+    if (baseA && baseB) liveRatio = baseA / baseB;
+  }
+  updateRatioBadge();
+  if (which === 'A') syncPctFromTargetA(); // re-align slider to fixed target
+  // src='targetA' when A updates: targetB gets recomputed from current pct,
+  // but the user's saved targetA dollar value is left untouched.
+  renderSlider(which === 'A' ? 'targetA' : null);
+  updateFxPanel();
+  if (saveRatio && baseA && baseB) addRatioPoint();
+}
+
+function updateRatioBadge() {
+  if (baseA && baseB) {
+    const live = (baseA/baseB).toFixed(6);
+    const h = getHistory();
+    const est = h.length ? getEstimate(h.map(x=>x.ratio)) : null;
+    $('ratioBadge').textContent = `Ratio A÷B: ${live}` + (est ? `  |  Est: ${est.toFixed(6)}` : '');
+  }
+}
+
+/* 
+   FETCH — Asset A via CoinMarketCap Pro
+   (symbol is now driven by the active profile)
+ */
+/* ═══════════════
+   FX INTELLIGENCE — USD/CAD decomposition
+═══════════════ */
+async function fetchFxRate() {
+  if (fxSessionFetched) return;
+  fxSessionFetched = true;
+  try {
+    const res = await fetch('/api/cmc-fx', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.status?.error_code !== 0) throw new Error('CMC FX: ' + json.status?.error_message);
+    const rate = json?.data?.quote?.CAD?.price;
+    if (!rate) throw new Error('No CAD price in FX response');
+    fxRate             = rate;
+    fxRateSessionStart = fxRateSessionStart ?? rate;
+    updateFxPanel();
+  } catch(e) {
+    console.warn('FX rate fetch failed:', e.message);
+    fxSessionFetched = false;  // allow retry
+  }
+}
+
+function updateFxPanel() {
+  const panel = $('fxPanel');
+  if (!fxRate) { if (panel) panel.style.display = 'none'; return; }
+  if (panel) panel.style.display = '';
+
+  const rd = $('fxRateDisplay'); if (rd) rd.textContent = '1 USD = ' + fxRate.toFixed(5) + ' CAD';
+  const rs = $('fxRateStat');    if (rs) rs.textContent = fxRate.toFixed(5);
+
+  if (!baseA) return;
+
+  // ── FX-normalised anchor: (A_USD × FX) / B_CAD — tracks the same-currency
+  //    ratio between the two assets.  This should stay ~constant for a
+  //    perfectly-pegged ETF regardless of FX moves. ──────────────────────────
+  const anchorNorm = getAnchorNormRatio();                   // e.g. ~3016 for BTC/FBTC
+
+  // Fair price of B in CAD implied by current A price and current FX rate,
+  // adjusted for the historically observed peg ratio.
+  // fairB = (A_USD × FX) / anchorNorm
+  const fairB = anchorNorm ? (baseA * fxRate) / anchorNorm : null;
+
+  const fb = $('fxFairB');
+  if (fb) {
+    if (fairB != null) {
+      fb.textContent = (fairB >= 10 ? fairB.toFixed(2) : fairB.toFixed(4)) + ' CAD';
+    } else {
+      fb.textContent = '— CAD';
+    }
+  }
+
+  if (baseB) {
+    // Premium / discount: how far is actual B from its FX-implied fair value?
+    const premPct = fairB != null ? ((baseB - fairB) / fairB) * 100 : null;
+    const pd = $('fxPremDisc');
+    if (pd) {
+      if (premPct != null) {
+        const sign = premPct >= 0 ? '+' : '';
+        let lbl = sign + premPct.toFixed(3) + '%';
+        if (Math.abs(premPct) >= 0.5) lbl += premPct > 0 ? '  (ETF premium)' : '  \u26a1 ETF discount';
+        pd.textContent = lbl;
+        pd.className   = 'stat-val' + (premPct > 0.5 ? ' pos' : premPct < -0.5 ? ' red' : '');
+      } else {
+        pd.textContent = '—'; pd.className = 'stat-val';
+      }
+    }
+
+    // Current same-currency ratio: (A_USD × FX) / B_CAD
+    const currentNorm = (baseA * fxRate) / baseB;
+    const nr = $('fxNormRatio');
+    if (nr) {
+      nr.textContent = currentNorm.toFixed(5);
+      // Green if within 0.5% of anchor, else gold
+      const closeToAnchor = anchorNorm && Math.abs((currentNorm - anchorNorm) / anchorNorm) < 0.005;
+      nr.className = 'stat-val ' + (closeToAnchor ? 'pos' : 'gold');
+    }
+
+    // Tracking error: deviation of current same-currency ratio from anchor
+    const trackErrPct = (anchorNorm && fairB != null) ? -((baseB - fairB) / fairB) * 100 : null;
+    const te = $('fxTrackErr');
+    if (te) {
+      if (trackErrPct != null) {
+        te.textContent = (trackErrPct >= 0 ? '+' : '') + trackErrPct.toFixed(3) + '% from anchor peg';
+        te.className   = 'stat-val ' + (Math.abs(trackErrPct) < 0.5 ? 'pos' : Math.abs(trackErrPct) < 1.5 ? 'gold' : 'red');
+      } else {
+        te.textContent = '— (building anchor…)'; te.className = 'stat-val';
+      }
+    }
+  }
+
+  // Tailwind / Headwind banner
+  const banner = $('fxBanner');
+  if (banner && fxRateSessionStart && fxRate !== fxRateSessionStart) {
+    const chgPct = ((fxRate - fxRateSessionStart) / fxRateSessionStart) * 100;
+    if (Math.abs(chgPct) >= 0.01) {
+      const up = chgPct > 0;
+      const abs = Math.abs(chgPct).toFixed(3);
+      banner.style.display    = '';
+      banner.style.background = up ? 'rgba(26,175,138,0.12)' : 'rgba(224,82,96,0.10)';
+      banner.style.border     = '1.5px solid ' + (up ? 'var(--green)' : 'var(--red)');
+      banner.style.color      = up ? 'var(--green)' : 'var(--red)';
+      banner.innerHTML = (up ? '\uD83D\uDCC8 FX Tailwind: ' : '\uD83D\uDCC9 FX Headwind: ')
+        + 'CAD has ' + (up ? 'weakened' : 'strengthened') + ' ' + abs
+        + '% this session \u2192 Asset B has a ' + (up ? '+' : '\u2212') + abs
+        + '% FX ' + (up ? 'boost' : 'drag') + ' vs USD-priced Asset A.';
+    } else { banner.style.display = 'none'; }
+  }
+
+  updateFxAttribution();
+}
+
+function updateFxAttribution() {
+  const el = $('fxAttrib');
+  if (!el || !fxRate || !baseA || !baseB) return;
+
+  const anchorNorm  = getAnchorNormRatio();
+  if (!anchorNorm) { el.style.display = 'none'; return; }
+
+  // Current same-currency ratio vs historical anchor
+  const currentNorm = (baseA * fxRate) / baseB;
+  // Express deviation as premium/discount on B:
+  //   premPct > 0 → B is above fair (premium)
+  //   premPct < 0 → B is below fair (discount)
+  const fairB   = (baseA * fxRate) / anchorNorm;
+  const premPct = ((baseB - fairB) / fairB) * 100;
+
+  if (Math.abs(premPct) < 0.01) { el.style.display = 'none'; return; }
+
+  const sign   = premPct >= 0 ? '+' : '';
+  const devCol = Math.abs(premPct) > 1 ? 'var(--red)' : 'var(--gold)';
+  const txt    = premPct < 0
+    ? 'Asset B is trading <strong>cheap</strong> (discount) vs USD-implied fair by '
+      + Math.abs(premPct).toFixed(3) + '% \u2014 this gap typically closes.'
+    : 'Asset B is trading at a <strong>premium</strong> vs USD-implied fair by '
+      + premPct.toFixed(3) + '%.';
+
+  el.style.display = '';
+  el.innerHTML = '<strong>Ratio Drift Analysis:</strong> FX-adjusted B fair value <strong>'
+    + (fairB >= 10 ? fairB.toFixed(2) : fairB.toFixed(4)) + ' CAD</strong>'
+    + ' vs actual <strong>' + (baseB >= 10 ? baseB.toFixed(2) : baseB.toFixed(4)) + ' CAD</strong>'
+    + ' \u2014 deviation: <strong style="color:' + devCol + '">'
+    + sign + premPct.toFixed(3) + '%</strong>. ' + txt;
+}
+
+async function fetchAssetA() {
+  fetchFxRate();  // once per session
+  const dot = $('dotA'), st = $('statusA');
+  const symbol = activeProfile ? activeProfile.cmcSymbol : 'ETH';
+  dot.className = 'dot loading'; st.textContent = `Fetching ${symbol} via CoinMarketCap…`;
+  try {
+    const res = await fetch(`/api/cmc-quote?symbol=${encodeURIComponent(symbol)}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.status?.error_code !== 0)
+      throw new Error('CMC ' + json.status.error_code + ': ' + json.status.error_message);
+    const price = json?.data?.[symbol]?.quote?.USD?.price;
+    if (!price) throw new Error('No price in CMC response');
+
+    const tickerLabel = activeProfile ? activeProfile.tickerA : symbol + '-USD';
+    setBase('A', Number(price), tickerLabel, false);
+    dot.className = 'dot live';
+    const t = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    st.textContent = `${tickerLabel} · ${fmtA(Number(price))} · ${t} · CoinMarketCap`;
+    if (!liveRatio && getHistory().length > 0) applyEstimatorToB();
+  } catch(e) {
+    dot.className = 'dot error'; st.textContent = 'CMC Error: ' + e.message;
+  }
+}
+
+/* 
+   FETCH — Asset B via EODHD
+ */
+async function fetchAsset(which) {
+  if (which === 'A') { return fetchAssetA(); }
+  const ticker = $('ticker'+which).value.trim().toUpperCase();
+  if (!ticker) return;
+  const dot=$('dot'+which), st=$('status'+which);
+  dot.className='dot loading'; st.textContent='Fetching…';
+  try {
+    const url = `https://eodhd.com/api/real-time/${encodeURIComponent(ticker)}?api_token=${TOKEN}&fmt=json`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    const price = data.bid ?? data.last ?? data.close ?? data.adjusted_close ?? null;
+    if (price == null) throw new Error('No price field');
+    setBase(which, Number(price), ticker, false);
+    dot.className='dot live';
+    const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    st.textContent = `${ticker} · ${fmtB(Number(price))} · ${t}`;
+  } catch(e) {
+    dot.className='dot error'; st.textContent='Error: '+e.message;
+  }
+}
+
+/* Fetch fresh A price, then commit ratio to history */
+async function fetchAAndSaveRatio() {
+  const capturedB = baseB;
+  await fetchAssetA();
+  if (!baseA || !capturedB) return;
+  const ratio = baseA / capturedB;
+  liveRatio = ratio;
+  propagateBLive();
+  const h = getHistory();
+  const fxNormRatio = fxRate ? (baseA * fxRate) / capturedB : null;
+  const pt = { ts: Date.now(), ratio };
+  if (fxNormRatio !== null) pt.fxNormRatio = fxNormRatio;
+  h.push(pt);
+  if (h.length > 1000) h.splice(0, h.length - 1000);
+  saveHistory(h);
+  refreshStats();
+}
+
+/* 
+   MANUAL INPUT
+ */
+function onManualA() {
+  const v = parseFloat($('manualA').value);
+  if (!isNaN(v) && v>0) setBase('A', v, $('tickerA').value.trim().toUpperCase(), false);
+}
+function onManualB() {
+  const v = parseFloat($('manualB').value);
+  if (!isNaN(v) && v>0) {
+    userSetB = true;
+    setBase('B', v, $('tickerB').value.trim().toUpperCase(), false);
+    fetchAAndSaveRatio();
+    resetAutoCountdown();
+  }
+}
+
+/* 
+   STEPPER
+ */
+/* ── Dynamic step based on dollar value ── */
+function getDynamicStep(value) {
+  const v = Math.abs(value);
+  if (v >= 100000) return 500;
+  if (v >= 10000)  return 100;
+  if (v >= 1000)   return 10;
+  if (v >= 100)    return 1;
+  return 0.01;
+}
+
+function doStep(dir) {
+  const cur  = parseFloat($('manualB').value) || 0;
+  const step = getDynamicStep(cur);
+  const next = Math.round((cur + dir * step) * 1e8) / 1e8;
+  $('manualB').value = step >= 1 ? next.toFixed(2) : next.toFixed(4);
+  userSetB = true;
+  setBase('B', next, $('tickerB').value.trim().toUpperCase(), false);
+  clearTimeout(stepDebounce);
+  stepDebounce = setTimeout(() => { fetchAAndSaveRatio(); resetAutoCountdown(); }, 800);
+}
+function startStep(dir) { doStep(dir); stepTimer=setInterval(()=>doStep(dir),140); }
+function stopStep()     { clearInterval(stepTimer); stepTimer=null; }
+
+/* 
+   AUTO-REFRESH  (every 2 min)
+ */
+function startAutoRefresh() {
+  autoSecsLeft = AUTO_MS / 1000;
+  updateCountdown();
+  clearInterval(autoTimer); clearInterval(autoCountdown);
+  autoTimer = setInterval(() => {
+    $('timerDot').className = 'rdot active';
+    fetchAssetA().then(() => {
+      renderSlider(null);
+      $('timerDot').className = 'rdot';
+    });
+    autoSecsLeft = AUTO_MS / 1000;
+  }, AUTO_MS);
+  autoCountdown = setInterval(() => {
+    autoSecsLeft = Math.max(0, autoSecsLeft-1);
+    updateCountdown();
+  }, 1000);
+}
+function updateCountdown() {
+  const m = Math.floor(autoSecsLeft/60), s = autoSecsLeft%60;
+  $('timerLabel').textContent = `Next A refresh in ${m}:${String(s).padStart(2,'0')}`;
+}
+function resetAutoCountdown() {
+  clearInterval(autoTimer);
+  clearInterval(autoCountdown);
+  startAutoRefresh();
+
+  // Persist target dollar values on page close/refresh so they survive a reload.
+  window.addEventListener('beforeunload', saveTargetValues);
+}
+
+/* 
+   SLIDER & DOLLAR TARGETS
+ */
+/* ── Slider persistence ── */
+function saveSliderPct() {
+  if (activeProfile) {
+    localStorage.setItem(SLIDER_KEY_PREFIX + activeProfile.name, currentPct.toString());
+  }
+}
+function restoreSliderPct() {
+  if (!activeProfile) return;
+  const saved = localStorage.getItem(SLIDER_KEY_PREFIX + activeProfile.name);
+  if (saved !== null) {
+    const pct = parseFloat(saved);
+    if (!isNaN(pct)) {
+      currentPct = pct;
+      $('slider').value = Math.max(-50, Math.min(100, pct));
+      renderSlider('slider');
+    }
+  }
+}
+
+function saveTargetValues() {
+  if (!activeProfile) return;
+  const tA = $('targetA').value.trim();
+  const tB = $('targetB').value.trim();
+  if (tA) localStorage.setItem(TARGET_A_KEY_PREFIX + activeProfile.name, tA);
+  else    localStorage.removeItem(TARGET_A_KEY_PREFIX + activeProfile.name);
+  if (tB) localStorage.setItem(TARGET_B_KEY_PREFIX + activeProfile.name, tB);
+  else    localStorage.removeItem(TARGET_B_KEY_PREFIX + activeProfile.name);
+}
+function restoreTargetValues() {
+  if (!activeProfile) return;
+  const tA = localStorage.getItem(TARGET_A_KEY_PREFIX + activeProfile.name);
+  const tB = localStorage.getItem(TARGET_B_KEY_PREFIX + activeProfile.name);
+  if (tA) $('targetA').value = tA;
+  if (tB) $('targetB').value = tB;
+}
+// Re-derive slider % from the user's fixed targetA whenever base A changes.
+// This keeps projA aligned with the target price the user entered.
+function syncPctFromTargetA() {
+  const tA = parseFloat($('targetA').value);
+  if (!isNaN(tA) && tA > 0 && baseA) {
+    const derived = ((tA - baseA) / baseA) * 100;
+    currentPct = Math.max(-50, Math.min(100, derived));
+    $('slider').value = currentPct;
+    saveSliderPct();
+  }
+}
+
+
+function onSliderDrag() {
+  currentPct = parseFloat($('slider').value);
+  renderSlider('slider');
+  saveSliderPct();
+  saveTargetValues(); // keep target $ in sync with slider position
+}
+function renderSlider(src) {
+  const pct = currentPct, mult = 1+pct/100;
+  const el = $('pctDisplay');
+  el.textContent = (pct>=0?'+':'')+pct.toFixed(2)+'%';
+  el.className = 'pct-big'+(pct>0?' pos':pct<0?' neg':'');
+  if (baseA != null) {
+    const pa = baseA*mult;
+    $('projA').textContent = fmtA(pa);
+    $('projA').className = 'proj-price'+(pct>0?' pos':pct<0?' neg':'');
+    $('deltaA').textContent = fmtDelta(pa-baseA, pct);
+    if (src !== null && src!=='targetA') $('targetA').value = pa >= 100 ? Math.round(pa) : pa.toFixed(4);
+  }
+  if (baseB != null) {
+    const pb = baseB*mult;
+    $('projB').textContent = fmtB(pb);
+    $('projB').className = 'proj-price'+(pct>0?' pos':pct<0?' neg':'');
+    $('deltaB').textContent = fmtDelta(pb-baseB, pct);
+    if (src !== null && src!=='targetB') $('targetB').value = pb.toFixed(2);
+  }
+}
+function onTargetDollar(which) {
+  const base = which==='A' ? baseA : baseB;
+  const target = parseFloat($(which==='A'?'targetA':'targetB').value);
+  if (!base || isNaN(target) || target<=0) return;
+  currentPct = ((target-base)/base)*100;
+  $('slider').value = Math.max(-50, Math.min(100, currentPct));
+  renderSlider(which==='A'?'targetA':'targetB');
+  saveSliderPct();
+  saveTargetValues();
+}
+function resetSlider() {
+  currentPct=0; $('slider').value=0;
+  $('targetA').value=''; $('targetB').value='';
+  saveTargetValues(); saveSliderPct();  // clear persisted targets on reset
+  renderSlider('reset');
+}
+
+/* 
+   INIT
+ */
+window.addEventListener('DOMContentLoaded', () => {
+  // Dark mode
+  initDarkMode();
+
+  // Restore estimator/halflife prefs
+  $('estimatorSelect').value = localStorage.getItem(PREF_KEY) || 'kde';
+  $('halfLifeSelect').value    = localStorage.getItem(HALFLIFE_KEY) || '25';
+
+  // Debug panel
+  if (localStorage.getItem(DEBUG_KEY) === '1') {
+    $('debugPanel').classList.add('open');
+    $('debugToggleBtn').textContent = '▲ Hide Ratio Debug';
+  }
+
+  // Profiles — render dropdown, apply saved active
+  const savedActiveName = localStorage.getItem(ACTIVE_KEY);
+  const all = loadAllProfiles();
+  const initialProfile = all.find(p => p.name === savedActiveName) || all[0];
+  renderProfileDropdown();
+  $('profileSelect').value = initialProfile.name;
+  applyProfile(initialProfile);
+  startAutoRefresh();
+
+  /* ── Dynamic arrow-key step for all dollar inputs ── */
+  const arrowInputMap = {
+    manualA: () => onManualA(),
+    manualB: () => onManualB(),
+    targetA: () => onTargetDollar('A'),
+    targetB: () => onTargetDollar('B'),
+  };
+  Object.entries(arrowInputMap).forEach(([id, handler]) => {
+    const el = $(id);
+    if (!el) return;
+    el.addEventListener('keydown', function(e) {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+      e.preventDefault();
+      const dir  = e.key === 'ArrowUp' ? 1 : -1;
+      const cur  = parseFloat(this.value) || 0;
+      const step = getDynamicStep(cur);
+      const raw  = cur + dir * step;
+      const next = Math.round(raw * 1e8) / 1e8;
+      this.value = step >= 1 ? next.toFixed(2) : next.toFixed(4);
+      handler();
+    });
+  });
+});
+</script>
+</body>
+</html>
