@@ -28,7 +28,7 @@
       "url": "./projects/price-link",
       "image": "./projects/price-link/thumbnail.jpg",
       "tags": ["finance", "calculator","dynamic","live data"],
-      "status": "live",
+      "status": "wip",
       "featured": false,
       "enabled": true,
       "openInNewTab": true,
