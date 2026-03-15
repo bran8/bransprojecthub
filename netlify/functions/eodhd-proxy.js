@@ -1,5 +1,5 @@
 // netlify/functions/eodhd-proxy.js
-  const fetch = require('node-fetch');
+  //const fetch = require('node-fetch');
 
   exports.handler = async function(event, context) {
     const { ticker } = event.queryStringParameters || {};
@@ -27,7 +27,6 @@
           // This is what enables your page to read the response
           'Access-Control-Allow-Origin': '*',
           // If you want to restrict to your Netlify domain:
-          // 'Access-Control-Allow-Origin': 'https://69b73df376b54f000846d5f2--bransprojecthub.netlify.app',
         },
         body: JSON.stringify(data),
       };
