@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement | Premium Financial Planner</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">🚀</span>
+                <h1>Retire Calculator</h1>
+            </div>
+            <div class="plan-controls">
+                <input type="text" id="planName" placeholder="Plan Name (e.g. Bran47)">
+                <button id="savePlan" class="btn-secondary">Save Plan</button>
+                <select id="loadPlanList">
+                    <option value="">Load Saved Plan...</option>
+                </select>
+                <button id="deletePlan" class="btn-danger">Delete</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="sidebar">
+                <div class="card">
+                    <h2>Core Parameters</h2>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label>Starting Age</label>
+                            <input type="number" id="startingAge" value="47">
+                        </div>
+                        <div class="input-group">
+                            <label>Starting Year</label>
+                            <input type="number" id="startingYear" value="2026">
+                        </div>
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label>Target Net Income</label>
+                            <span id="incomeDisplay" class="slider-value">$100,000</span>
+                        </div>
+                        <input type="range" id="desiredIncome" min="20000" max="750000" step="10" value="100000">
+                        <div class="optimize-controls">
+                            <button id="optimizeBtn" class="btn-optimize">⚡ Optimize to Age 84</button>
+                            <button id="optimizeDieBtn" class="btn-optimize die">⚡ Die with $0 (Age 92)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Account Balances & CAGR</h2>
+                    <p class="instr">Headline % | Bond Portion $ | Bond %</p>
+
+                    <div class="account-input">
+                        <label>RRIF</label>
+                        <div class="row">
+                            <input type="number" id="rifBal" placeholder="Balance" value="500456">
+                            <input type="number" id="rifCAGR" placeholder="Headline %" value="7.61" step="0.01">
+                        </div>
+                        <div class="row secondary">
+                            <input type="number" id="rifBondAmt" placeholder="Bond Port." value="0">
+                            <input type="number" id="rifBondCAGR" placeholder="Bond %" value="4.0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="account-input">
+                        <label>LIF</label>
+                        <div class="row">
+                            <input type="number" id="lifBal" placeholder="Balance" value="219156">
+                            <input type="number" id="lifCAGR" placeholder="Headline %" value="7.61" step="0.01">
+                        </div>
+                        <div class="row secondary">
+                            <input type="number" id="lifBondAmt" placeholder="Bond Port." value="0">
+                            <input type="number" id="lifBondCAGR" placeholder="Bond %" value="4.0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="account-input">
+                        <label>TFSA</label>
+                        <div class="row">
+                            <input type="number" id="tfsaBal" placeholder="Balance" value="74211">
+                            <input type="number" id="tfsaCAGR" placeholder="Headline %" value="7.61" step="0.01">
+                        </div>
+                        <div class="row secondary">
+                            <input type="number" id="tfsaBondAmt" placeholder="Bond Port." value="50000">
+                            <input type="number" id="tfsaBondCAGR" placeholder="Bond %" value="4.0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="account-input">
+                        <label>Savings</label>
+                        <div class="row">
+                            <input type="number" id="saveBal" placeholder="Balance" value="0">
+                            <input type="number" id="saveCAGR" placeholder="Headline %" value="5.0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="account-input">
+                        <label>Bitcoin</label>
+                        <div class="row">
+                            <input type="number" id="btcBal" placeholder="Balance $" value="475596">
+                            <input type="number" id="btcCAGR" placeholder="CAGR %" value="21.0" step="1">
+                        </div>
+                        <div class="row secondary">
+                            <input type="number" id="btcCostBase" placeholder="Cost Base $" value="287614">
+                            <span class="input-hint">Cost Base</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Govt & Tax</h2>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label>Tax Year Rates</label>
+                            <select id="taxYear">
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>CPP Start Age</label>
+                            <input type="number" id="cppAge" value="65">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Bear Market Years</h2>
+                    <p class="instr">Tag years with negative CAGR (comma-separated: year:rate)</p>
+                    <input type="text" id="bearYears" placeholder="e.g. 2030:-0.15, 2034:-0.10"
+                        value="2026:-0.15, 2030:-0.10, 2034:-0.15, 2038:-0.10">
+                </div>
+
+                <!-- Calculate Retirement button removed per user request -->
+            </section>
+
+            <section class="content">
+                <div class="dashboard-grid">
+                    <div class="kpi-card">
+                        <h3>Success Years</h3>
+                        <p id="successYears" class="kpi-value">--</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Final Net Worth</h3>
+                        <p id="finalNetWorth" class="kpi-value">--</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Lifetime Tax</h3>
+                        <p id="lifetimeTax" class="kpi-value">--</p>
+                    </div>
+                </div>
+
+                <div class="card chart-container">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+
+                <div class="card scroll-frame">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Age</th>
+                                <th>Year</th>
+                                <th>Phase</th>
+                                <th>Net Income</th>
+                                <th>Tax</th>
+                                <th>RRIF</th>
+                                <th>LIF</th>
+                                <th>TFSA</th>
+                                <th>Save</th>
+                                <th>BTC</th>
+                                <th>Total Bal</th>
+                                <th>Δ%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="engine.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
